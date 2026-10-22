@@ -10,6 +10,15 @@ Author: **Marcin Kowalik** — mkowalik@agh.edu.pl
 
 This validates the installation and boot path on the tested devices. It is **not** a blanket guarantee for every board revision or every diagnostic feature in v1.3. Supported reference hardware is Inventure **V9 / STM32F207 / 256 KiB Flash**. If your bootloader, flash size or motherboard differs, do not bypass compatibility checks.
 
+## Download the correct one-card SD ZIP
+
+Both downloadable packages are available in the public [SD_INSTALLATION folder](../SD_INSTALLATION/README.md).
+
+- **For printers running Inventure boot v1.2:** [download upgrade v1.2 → v1.3 ZIP](../SD_INSTALLATION/01_UPGRADE_v1.2_to_v1.3/Inventure_boot_v1.3_SD_Z_v1.2_JEDNA_KARTA.zip) — SHA-256 `1acb7a734263fd38046f89c4cb6e510454f69e5701885fa1d459f1f805e0ca9a`.
+- **For factory Zortrax bootloader v1.0 on verified V9:** [download factory v1.0 → v1.3 ZIP](../SD_INSTALLATION/02_FACTORY_ZORTRAX_v1.0_to_v1.3/Inventure_boot_v1.3_SD_FABRYCZNA_V9_JEDNA_KARTA.zip) — SHA-256 `69e1c943284dd23d1cff71b07c6d57dea67d8cdeecc6df69a9045638ec017319`.
+
+Extract your ZIP **on your computer**, then copy the **four extracted files** into FAT32 SD root. The zip file itself must not remain as the only file on the SD card. For an end-to-end bilingual walkthrough see [SD_INSTALLATION/README.md](../SD_INSTALLATION/README.md).
+
 ## Choose exactly one installer
 
 | Existing bootloader | First-stage file | Other SD files |
