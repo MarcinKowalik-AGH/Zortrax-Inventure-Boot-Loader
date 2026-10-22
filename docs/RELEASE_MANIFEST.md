@@ -24,6 +24,15 @@ Test records from project work: **1099/1099** v1.3 offline tests, **11/11** inst
 
 Never assume that a successful GitHub upload means a physical firmware update is risk-free. Replacing boot sectors carries an unavoidable power-loss risk and may require SWD recovery.
 
-## Current repository status
+## Verified public SD release packages
 
-Documentation may be published before binary assets are uploaded. **Do not claim that the two installation ZIP packages or the standalone BIN are published until their GitHub object hashes and download URLs are verified.** See the actual repository tree for released artifacts.
+The repository contains **both complete binary-only SD installation archives**, committed to public `main` under `SD_INSTALLATION/`. The uploaded ZIP Git object hashes were checked against the exact local archive bytes.
+
+| Package | Archive | Bytes | ZIP SHA-256 | Git blob SHA-1 |
+| --- | --- | ---: | --- | --- |
+| v1.2 → v1.3 | [upgrade ZIP](../SD_INSTALLATION/01_UPGRADE_v1.2_to_v1.3/Inventure_boot_v1.3_SD_Z_v1.2_JEDNA_KARTA.zip) | 136276 | `1acb7a734263fd38046f89c4cb6e510454f69e5701885fa1d459f1f805e0ca9a` | `bd941135fcad1a37ff365369aeb599021050e1b9` |
+| Factory v1.0 → v1.3 | [factory ZIP](../SD_INSTALLATION/02_FACTORY_ZORTRAX_v1.0_to_v1.3/Inventure_boot_v1.3_SD_FABRYCZNA_V9_JEDNA_KARTA.zip) | 151963 | `69e1c943284dd23d1cff71b07c6d57dea67d8cdeecc6df69a9045638ec017319` | `6bda427921aaf2c2968c6a8fe3c0f9bbbe0de28b` |
+
+Each ZIP contains only its installer payload, `RESTORE.BIN` and two preallocated backup slots. No bootloader/installer source, ELF, map or private dump is included. The original Zortrax application payload in `RESTORE.BIN` remains subject to separate manufacturer rights and licensing.
+
+For extraction, copy-to-SD steps, hardware checks, physical confirmation and restoring the application, see [bilingual SD installer guide](../SD_INSTALLATION/README.md).
