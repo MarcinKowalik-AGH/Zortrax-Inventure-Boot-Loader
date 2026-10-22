@@ -1,36 +1,53 @@
-# Inventure boot v1.3
+# Inventure boot v1.3 — Zortrax Inventure V9
 
-**Binary-only installer distributions and documentation for Zortrax Inventure V9**  
-**Autor / Author:** Marcin Kowalik · mkowalik@agh.edu.pl  
-**Date:** 2026-10-22
+**Independent, third-party service bootloader — firmware installation binaries and manuals.**  
+**Author / Autor:** Marcin Kowalik · mkowalik@agh.edu.pl  
+**Tested board / Testowana płyta:** Inventure V9, STM32F207, 256 KiB Flash.
 
-[English installation guide](docs/INSTALLATION_EN.md) · [Instrukcja instalacji po polsku](docs/INSTALACJA_PL.md) · [English feature and UART reference](docs/FEATURES_AND_CONSOLE_EN.md) · [Opis funkcji i konsoli po polsku](docs/FUNKCJE_I_KONSOLA_PL.md) · [Checksums and release scope](docs/RELEASE_MANIFEST.md)
+[English installation manual](docs/INSTALLATION_EN.md) · [Instrukcja instalacji po polsku](docs/INSTALACJA_PL.md)  
+[English features & UART commands](docs/FEATURES_AND_CONSOLE_EN.md) · [Funkcje i konsola po polsku](docs/FUNKCJE_I_KONSOLA_PL.md)  
+[Release manifest & publication scope](docs/RELEASE_MANIFEST.md)
 
-## English
+## Hardware status / Testy sprzętowe
 
-Inventure boot v1.3 is an independent recovery and maintenance bootloader for the **verified Zortrax Inventure V9 with STM32F207 and 256 KiB internal Flash**. It supports a 3-second interruptible autoboot, installing and verifying compatible Inventure firmware from SD, flash and identity backups, multiple firmware files on SD, UART6 diagnostics and dumps, reset/recovery information, and service event history.
+**Confirmed by the project owner on physical printers:**
 
-Two installation paths are documented:
+1. **Upgrade from Inventure boot v1.2 to v1.3 using SD.**
+2. **Installation from original factory Zortrax bootloader v1.0 to Inventure boot v1.3 using SD**, followed by restoring and starting the original Zortrax application.
 
-1. **Upgrade v1.2 → v1.3** via the `INVENTUR.IVB` service application and two boot-sector backup slots.
-2. **Factory V9 → v1.3** via the encrypted `InventureUpdate.bin` service application and the same backup mechanism.
+**Potwierdzono na rzeczywistych drukarkach:** oba scenariusze instalacji — aktualizację naszego v1.2 do v1.3 oraz instalację z fabrycznego bootloadera Zortrax v1.0. Po przywróceniu firmware fabryczna aplikacja uruchomiła się prawidłowo.
 
-Installation is a **two-stage operation**: first the existing bootloader installs a temporary service application into the application region; then the application installs the new bootloader after dual verified SD backups and explicit button confirmation. The original Inventure application must subsequently be restored. **Never feed the 32 KiB bootloader image directly to the application updater.**
+These tests validate both installation paths **on the tested printers**, not universal compatibility with all board versions or every advanced diagnostic feature.
 
-**Release qualification:** v1.3 and factory bridge r9893 passed offline checks; **these exact builds have not yet been qualified on physical hardware**. Earlier bootloader and bridge versions were successfully tested on the owner's printers. A power failure when erasing boot sectors may require SWD/ST-Link recovery.
+## What it does / Funkcje
 
-## Polski
+- **3-second interruptible autoboot** of a validated installed application; any front-panel key enters the maintenance menu.
+- English OLED menu with UP / DOWN / OK navigation, **Back** on submenus and `© Marcin Kowalik` branding.
+- Read, decrypt, verify and install compatible Zortrax firmware from FAT32 SD, with explicit confirmation.
+- Avoid unnecessary rewrites when the selected firmware is already installed.
+- Browse up to 16 update files on SD; checksum/progress feedback.
+- Backup Flash/identity metadata to preallocated files; backup verification.
+- Hardware diagnostics, reset reason and recovery latch, service-event history.
+- UART6 service console at **250000 baud, 8N1**, including read-only information and binary memory export commands.
+- Author information in OLED About / UART INFO.
 
-Inventure boot v1.3 to niezależny bootloader serwisowy dla **zweryfikowanej płyty Zortrax Inventure V9, STM32F207, Flash 256 KiB**. Oferuje autostart po 3 sekundach z możliwością przerwania, aktualizację aplikacji z SD, weryfikację, backup Flash i danych identyfikacyjnych, listę plików, diagnostykę UART6 i historię zdarzeń.
+## Installation variants
 
-Przewidziano **dwa odrębne warianty instalacji**: aktualizację naszego v1.2 oraz instalację na fabrycznej V9. W obu przypadkach najpierw instalowana jest aplikacja serwisowa, później następuje zweryfikowany backup dwóch sektorów bootloadera i świadomie potwierdzana instalacja nowego kodu. Na końcu trzeba przywrócić oryginalną aplikację Inventure.
+| Printer at the start | First-stage installer | Instructions |
+| --- | --- | --- |
+| Running **Inventure boot v1.2** | `INVENTUR.IVB` plus `RESTORE.BIN`, `ZBACKUP.BIN`, `ZBACK2.BIN` | [English](docs/INSTALLATION_EN.md) / [Polski](docs/INSTALACJA_PL.md) |
+| Running **factory Zortrax bootloader v1.0** on verified V9 | `InventureUpdate.bin` plus the same other three files | [English](docs/INSTALLATION_EN.md) / [Polski](docs/INSTALACJA_PL.md) |
 
-**Uwaga:** wydanie v1.3 i nowy instalator r9893 mają zaliczone testy komputerowe, ale **nie są jeszcze osobno sprawdzone sprzętowo**. Przerwanie zapisu sektorów 0–1 może wymagać ratowania przez ST-Link. Stosować tylko na zgodnej płycie i przy stabilnym zasilaniu.
+The first stage replaces the **application** with a service installer, the second stage saves and verifies two bootloader backups and installs new boot sectors, and the final stage restores an original compatible application. **A raw 32-KiB bootloader BIN is not an ordinary SD application update.**
 
-## Distribution policy / Zasady publikacji
+## Downloads and redistribution
 
-**Binary and installation packages only. No bootloader/installer C or assembly sources, build system, ELF, map, disassembly, private MCU dumps, OTP, UID or customer calibration data are published.**
+**No source code is published.** This repository is intended for binary installers that are legally redistributable, plus documentation. Do not upload C/ASM, ELF, maps, internal analyses, cryptographic secrets, printer Flash/NVM dumps, UID/OTP or proprietary manufacturer firmware without authorization.
 
-No affiliation with, authorization from, or endorsement by Zortrax is implied. This is a third-party maintenance project for equipment owned by its users. Original manufacturer's firmware may be subject to separate copyright and license terms; check those terms before redistribution.
+> **Binary upload verification:** inspect the actual repository tree; the mere presence of this README does **not** imply installation ZIPs or BINs have already been released. A compatible original firmware image must be obtained lawfully from an appropriate source.
 
-See the detailed guides for file layout, expected messages, complete console commands and safety checks.
+## Risks / Ryzyko
+
+**Replacing bootloader sectors 0–1 is not power-loss-safe.** Losing power at the critical erase/program phase can require **ST-Link/SWD recovery**. Two backups on the same SD are not independent backups. Use stable power, confirmed motherboard identity and a recovery plan; never bypass unknown-hardware checks or use mass erase. The owner-tested installation paths do not justify assumptions about other Inventure board revisions.
+
+Third-party project, not affiliated with or endorsed by Zortrax.
