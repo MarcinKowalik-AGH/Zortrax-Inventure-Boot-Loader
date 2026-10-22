@@ -10,6 +10,15 @@ Autor: **Marcin Kowalik** — mkowalik@agh.edu.pl
 
 Potwierdza to oba scenariusze instalowania na przetestowanych egzemplarzach, ale nie stanowi gwarancji dla wszystkich rewizji płyt ani potwierdzenia każdej dodatkowej funkcji diagnostycznej. Docelowy sprzęt: **Inventure V9, STM32F207, 256 KiB Flash**.
 
+## Pobierz paczkę instalacyjną na SD
+
+Oba archiwa znajdują się w publicznym [katalogu SD_INSTALLATION](../SD_INSTALLATION/README.md).
+
+- **Drukarka z naszym Inventure boot v1.2:** [pobierz ZIP aktualizacyjny v1.2 → v1.3](../SD_INSTALLATION/01_UPGRADE_v1.2_to_v1.3/Inventure_boot_v1.3_SD_Z_v1.2_JEDNA_KARTA.zip) — SHA-256 `1acb7a734263fd38046f89c4cb6e510454f69e5701885fa1d459f1f805e0ca9a`.
+- **Drukarka z fabrycznym bootloaderem Zortraxa v1.0 i zgodną V9:** [pobierz ZIP instalacyjny v1.0 → v1.3](../SD_INSTALLATION/02_FACTORY_ZORTRAX_v1.0_to_v1.3/Inventure_boot_v1.3_SD_FABRYCZNA_V9_JEDNA_KARTA.zip) — SHA-256 `69e1c943284dd23d1cff71b07c6d57dea67d8cdeecc6df69a9045638ec017319`.
+
+**ZIP rozpakuj na komputerze.** Na kartę FAT32 kopiujesz **cztery pliki z wnętrza właściwego archiwum**, nie sam plik ZIP. Szczegółowa instrukcja obu wariantów, także po angielsku: [SD_INSTALLATION/README.md](../SD_INSTALLATION/README.md).
+
 ## Wybór paczki SD
 
 | Co jest teraz w drukarce? | Instalator na karcie | Pozostałe pliki |
