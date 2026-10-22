@@ -40,11 +40,20 @@ These tests validate both installation paths **on the tested printers**, not uni
 
 The first stage replaces the **application** with a service installer, the second stage saves and verifies two bootloader backups and installs new boot sectors, and the final stage restores an original compatible application. **A raw 32-KiB bootloader BIN is not an ordinary SD application update.**
 
-## Downloads and redistribution
+## Download v1.3 installers / Pobierz instalatory SD
 
-**No source code is published.** This repository is intended for binary installers that are legally redistributable, plus documentation. Do not upload C/ASM, ELF, maps, internal analyses, cryptographic secrets, printer Flash/NVM dumps, UID/OTP or proprietary manufacturer firmware without authorization.
+**Both installations have been successfully tested by the project owner on physical Inventure printers.** Download the archive appropriate to the **current** bootloader, extract it, then copy its four files — not the ZIP file — to the **root directory of a FAT32 SD card**.
 
-> **Binary upload verification:** inspect the actual repository tree; the mere presence of this README does **not** imply installation ZIPs or BINs have already been released. A compatible original firmware image must be obtained lawfully from an appropriate source.
+| Existing bootloader / Obecny bootloader | Download / Pobierz | Files to copy to SD |
+| --- | --- | --- |
+| **Inventure boot v1.2** (upgrade / aktualizacja) | **[Download SD installer for v1.2 → v1.3](SD_INSTALLATION/01_UPGRADE_v1.2_to_v1.3/Inventure_boot_v1.3_SD_Z_v1.2_JEDNA_KARTA.zip)** | `INVENTUR.IVB`, `RESTORE.BIN`, `ZBACKUP.BIN`, `ZBACK2.BIN` |
+| **Factory Zortrax v1.0** (oryginalny bootloader) | **[Download SD installer for factory v1.0 → v1.3](SD_INSTALLATION/02_FACTORY_ZORTRAX_v1.0_to_v1.3/Inventure_boot_v1.3_SD_FABRYCZNA_V9_JEDNA_KARTA.zip)** | `InventureUpdate.bin`, `RESTORE.BIN`, `ZBACKUP.BIN`, `ZBACK2.BIN` |
+
+**[Step-by-step SD installation / Instalacja przez SD — English & Polski](SD_INSTALLATION/README.md)**
+
+The first stage installs a temporary service application; that application creates and verifies **two backups of the current bootloader** before changing sectors 0–1, after separate physical confirmation. The last stage restores original compatible Zortrax application from `RESTORE.BIN`. **Do not omit the restore step.** Be aware of power-loss risk and hardware compatibility limitations.
+
+**No source code is published.** Only binary installation archives and manuals are included, without C/ASM, ELF, maps, private memory dumps, OTP or UID. `RESTORE.BIN` contains a manufacturer application payload subject to separate Zortrax rights and licensing; users must ensure lawful use and distribution.
 
 ## Risks / Ryzyko
 
