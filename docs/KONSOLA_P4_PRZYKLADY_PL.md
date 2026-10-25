@@ -101,17 +101,17 @@ BOOT
 
 Numer 0 to **przykład**, nie gwarantowana pozycja. `SDUPDATE` aktualizuje aplikację, a nie sektory BOOT.
 
-**Wariant faktycznej transmisji pliku przez P4** wymaga lokalnego programu hosta, nie samego terminala. Narzędzie `ibtool.py serial` przyjmuje **IVB**, a nie zaszyfrowany ZRTX. Prywatny `vendor_tool.py` rozpoznaje/odszyfrowuje tylko znane stock obrazy i może wygenerować IVB. Przykład uruchamiany w terminalu *komputera* (narzędzia z prywatnej pełnej paczki źródeł, **nieopublikowane na GitHubie**):
+**Zaszyfrowany ZRTX przez UART:** publiczne [`tools/vendor_tool.py`](../tools/vendor_tool.py) **nie zawiera klucza AES** i nie odszyfrowuje `InventureUpdate.bin`. Sam `ibtool.py serial` przyjmuje tylko poprawnie przygotowany `.IVB`, a nie zaszyfrowany pakiet. Bezpieczna droga dla zaszyfrowanego pliku to powyższa instalacja z **SD** (bootloader sam rozpoznaje i sprawdza wspierany obraz).
+
+Można **bez odszyfrowywania** podejrzeć jedynie metadane zewnętrznego kontenera:
 
 ```sh
-python3 tools/vendor_tool.py InventureUpdate.bin --ivb-out STOCK_R0323.IVB
-python3 tools/ibtool.py inspect STOCK_R0323.IVB
-python3 tools/ibtool.py serial STOCK_R0323.IVB --port /dev/cu.TWOJ_PORT --baud 250000
-# zapis dopiero po pomyślnej kontroli:
-python3 tools/ibtool.py serial STOCK_R0323.IVB --port /dev/cu.TWOJ_PORT --baud 250000 --update
+python3 tools/vendor_tool.py InventureUpdate.bin
+# Wypisuje tylko zewnętrzną rewizję i rozmiar.
+# --ivb-out przy zaszyfrowanym wejściu zostanie świadomie odrzucone.
 ```
 
-Pierwsze `serial` wykonuje `UARTCHECK` bez zapisu; `--update` wykonuje `UARTUPDATE`, nadal z fizycznym potwierdzeniem. Dla zaszyfrowanego wejścia narzędzie wymaga OpenSSL; dla portu — pySerial. Przed uruchomieniem zamknij miniterm.
+Aby przesłać oryginalną aplikację przez UART, należy **posiadać już odszyfrowany, znany obraz APP** i spakować go do `.IVB` publicznym narzędziem opisanym w przykładzie B. W repozytorium nie publikujemy klucza odszyfrowywania, klucza HMAC, danych `tail20` ani żadnego programu je wyliczającego.
 
 ## 5. Przykład B — odszyfrowany, oryginalny obraz APP
 
@@ -130,23 +130,27 @@ BOOT
 
 `SELECT 1` znów jest wyłącznie przykładem; odczytaj numer z `LIST`. **RESTORE.BIN należy wybrać jawnie**, nie jest wybierany przez `SELECT AUTO`. Potwierdzenia i weryfikacja jak powyżej.
 
-Przykład przez UART na komputerze, po lokalnym opakowaniu rozpoznanego stock w IVB:
+**Przesyłanie przez UART bez sekretów:** oba skrypty są teraz publiczne: [`tools/vendor_tool.py`](../tools/vendor_tool.py) i [`tools/ibtool.py`](../tools/ibtool.py). Pierwszy przyjmuje **już odszyfrowaną** aplikację, sprawdza jej SHA-256 względem ośmiu rozpoznanych obrazów i opakowuje ją w IVB. Jeżeli plik zawiera **kompletny oryginalny payload wraz z istniejącym tail i paddingiem**, narzędzie zachowa go wyłącznie po zgodności pełnego SHA-256 z archiwalnym wzorcem. Nie generuje ani nie sprawdza HMAC za pomocą tajnego klucza.
 
 ```sh
+python3 -m pip install pyserial
 python3 tools/vendor_tool.py application_r0323.bin --ivb-out STOCK_RAW_R0323.IVB
 python3 tools/ibtool.py inspect STOCK_RAW_R0323.IVB
+# Bez zapisu: UARTCHECK
+python3 tools/ibtool.py serial STOCK_RAW_R0323.IVB --port /dev/cu.TWOJ_PORT --baud 250000
+# Dopiero po pomyślnym teście: UARTUPDATE + potwierdzenie OK+UP 2 s
 python3 tools/ibtool.py serial STOCK_RAW_R0323.IVB --port /dev/cu.TWOJ_PORT --baud 250000 --update
 ```
 
-Nie usuwaj końcowego HMAC/paddingu bez walidacji i nie próbuj przesyłać pełnego dumpa jako aplikacji.
+**Istotne rozróżnienie:** gdy plik wejściowy zawiera *samą* surową APP (bez oryginalnego tail), wynik jest poprawnym **własnym IVB z manifestem** dla tego samego kodu aplikacji, **nie** bajtowo identycznym pełnym obrazem fabrycznym. Publiczny skrypt nie odtwarza tail20. Nie traktuj tej drogi jako osobno potwierdzonego testu sprzętowego. Dla oryginalnej, kanonicznej postaci firmware użyj sprawdzonego `RESTORE.BIN` lub autentycznego pakietu ZRTX bezpośrednio z SD. Nie usuwaj HMAC/paddingu z kompletnego obrazu i nie przesyłaj pełnego dumpa Flash jako APP.
 
 ## 6. Przykład C — własna aplikacja, np. Klipper MCU
 
-To **nie jest instrukcja instalacji zwykłego, uniwersalnego Klippera**. Potrzebny jest obraz przygotowany dla **STM32F207, Inventure V9**, z właściwymi zegarami, mapą GPIO, obsługą sprzętu i bezpieczeństwa, linkowany do **`0x08010000`**. Sam plik o nazwie `klipper.bin` nie wystarcza.
+To **nie jest instrukcja instalacji zwykłego, uniwersalnego Klippera**. Działające bez sekretów [`tools/ibtool.py`](../tools/ibtool.py) jest dostępne w tym repozytorium. Potrzebny jest obraz przygotowany dla **STM32F207, Inventure V9**, z właściwymi zegarami, mapą GPIO, obsługą sprzętu i bezpieczeństwa, linkowany do **`0x08010000`**. Sam plik o nazwie `klipper.bin` nie wystarcza.
 
 Bootloader obsługuje niezaszyfrowany format **`INVB001`** z nagłówkiem 64 B, `target=0x32463956`, `base=0x08010000`, długością i SHA-256. Surowa APP musi mieć **8–196352 B**, MSP w zakresie SRAM 128 KiB wyrównany do 8 i adres Reset Handler Thumb wewnątrz payloadu. Te warunki potwierdzają *strukturę*, nie poprawność termiki i napędów.
 
-Na komputerze, korzystając z prywatnego `tools/ibtool.py`:
+Na komputerze, korzystając z publicznego [`tools/ibtool.py`](../tools/ibtool.py):
 
 ```sh
 python3 tools/ibtool.py pack klipper.bin KLIPPER_V9.IVB

@@ -53,16 +53,17 @@ BOOT
 
 **Use the actual zero-based index from `LIST`**: 0 is illustrative. `SDUPDATE` needs OK+UP 2 s on the panel. After successful `VERIFY`, `BOOT` requires OK+DOWN 2 s. APP is changed; BOOT and factory NVM are preserved.
 
-For an actual file transfer **over UART**, the private `vendor_tool.py` converts a verified known vendor ZRTX into IVB; the `ibtool.py serial` host accepts **IVB only**, not raw ZRTX:
+**Encrypted ZRTX over UART:** the public [`tools/vendor_tool.py`](../tools/vendor_tool.py) contains **no AES key** and cannot decrypt `InventureUpdate.bin`. The public `ibtool.py serial` sender expects a valid **IVB**, not encrypted ZRTX. Use the **SD route above** for a supported encrypted vendor file — the bootloader itself recognizes and validates it.
+
+You may inspect the outer ZRTX envelope **without decrypting any application bytes**:
 
 ```sh
-python3 tools/vendor_tool.py InventureUpdate.bin --ivb-out STOCK_R0323.IVB
-python3 tools/ibtool.py inspect STOCK_R0323.IVB
-python3 tools/ibtool.py serial STOCK_R0323.IVB --port /dev/cu.YOUR_PORT --baud 250000
-python3 tools/ibtool.py serial STOCK_R0323.IVB --port /dev/cu.YOUR_PORT --baud 250000 --update
+python3 tools/vendor_tool.py InventureUpdate.bin
+# Reports outer revision/size only.
+# --ivb-out with encrypted input is explicitly rejected.
 ```
 
-These commands run on the **host computer**, not at `INV>`. The first serial call uses read-only `UARTCHECK`; the `--update` call uses `UARTUPDATE`, still with physical confirmation. They require the **private full source/tool package**, not included among the three publicly published firmware binaries. Encrypted vendor conversion needs OpenSSL; serial needs pySerial. Close miniterm first.
+For actual UART transfer of a stock application, supply an **already decoded** known APP and follow Example B. No AES key, vendor HMAC key, `tail20` contents or tail-generating routine are published.
 
 ## Example B — decoded original stock APP
 
@@ -79,21 +80,27 @@ VERIFY
 BOOT
 ```
 
-1 is only an example; read the real index. `RESTORE.BIN` must be selected explicitly. For UART, create IVB using the same private known-image tool:
+1 is only an example; read the real index. `RESTORE.BIN` must be selected explicitly.
+
+For UART, the **public** [`tools/vendor_tool.py`](../tools/vendor_tool.py) packages an **already decoded** known stock APP after comparing its SHA-256 with eight archived references. The **public** [`tools/ibtool.py`](../tools/ibtool.py) inspects and transfers IVB, without decrypting vendor firmware or producing a vendor tail:
 
 ```sh
+python3 -m pip install pyserial
 python3 tools/vendor_tool.py application_r0323.bin --ivb-out STOCK_RAW_R0323.IVB
 python3 tools/ibtool.py inspect STOCK_RAW_R0323.IVB
+# Check only: UARTCHECK, no Flash write
+python3 tools/ibtool.py serial STOCK_RAW_R0323.IVB --port /dev/cu.YOUR_PORT --baud 250000
+# Then explicit write: UARTUPDATE with OK+UP 2 s on the printer
 python3 tools/ibtool.py serial STOCK_RAW_R0323.IVB --port /dev/cu.YOUR_PORT --baud 250000 --update
 ```
 
-Do not strip vendor tails/padding speculatively and do not transmit full Flash dumps as APP.
+**Important distinction:** an input containing *only the raw stock APP body* produces a **custom-manifest IVB with the same APP code**, but **not a byte-identical manufacturer payload** — no vendor tail is synthesized. An **already existing complete** plaintext vendor payload (with its tail/padding) is preserved only if its **full SHA-256** matches a known reference. No secret signing key is used. This custom-manifest raw-stock route is not a separately confirmed physical hardware test. For canonical original firmware, prefer the verified `RESTORE.BIN` or supported encrypted ZRTX via SD. Never feed a full Flash dump as APP.
 
 ## Example C — custom APP, e.g. Klipper
 
 You need a real **STM32F207 V9** application compiled/linked at **0x08010000**, with correct clocks, GPIO, peripherals, thermal safety and host settings. A generic `klipper.bin` is **not compatible by name**. The custom unencrypted `INVB001` format uses a 64-byte header, target `0x32463956`, base `0x08010000`, length and SHA-256. Raw APP payload is **8–196352 bytes**, with valid aligned MSP in 128 KiB SRAM and Thumb Reset vector within the payload. These structural conditions **do not prove safe operation**.
 
-Use the **private** `tools/ibtool.py` to package and check a V9-specific raw app:
+Use the **public** [`tools/ibtool.py`](../tools/ibtool.py) to package and check a V9-specific raw app:
 
 ```sh
 python3 tools/ibtool.py pack klipper.bin KLIPPER_V9.IVB

@@ -18,6 +18,8 @@
 **[Konsola P4 — komendy i przykłady aktualizacji ZRTX, odszyfrowanej APP i Klippera](docs/KONSOLA_P4_PRZYKLADY_PL.md)**  
 **[P4 UART console and firmware examples — English](docs/P4_UART_EXAMPLES_EN.md)**
 
+**Publiczne skrypty PC / Public PC-side tools:** [`tools/ibtool.py`](tools/ibtool.py) — tworzenie, kontrola i ramkowe przesyłanie IVB przez P4; [`tools/vendor_tool.py`](tools/vendor_tool.py) — bezkluczowa kontrola/pakowanie **już odszyfrowanych** rozpoznanych aplikacji. **Nie ma kluczy AES/HMAC, funkcji odtwarzania tail20 ani odszyfrowywania ZRTX.** Zaszyfrowane oryginalne aktualizacje wgrywa się przez SD.
+
 [Funkcje i konsola](docs/FUNKCJE_I_KONSOLA_PL.md) · [Features and console](docs/FEATURES_AND_CONSOLE_EN.md) · [SHA-256](firmware/v1.4/SHA256SUMS.txt) · [Manifest i status prób / Manifest and test status](docs/RELEASE_MANIFEST.md)
 
 W każdym ZIP na SD są **cztery pliki binarne**. Rozpakuj ZIP na komputerze i skopiuj pliki do katalogu głównego karty FAT32. Wgranie przez SD obejmuje tymczasową aplikację instalatora, dwie sprawdzone kopie bieżącego BOOT, osobne potwierdzenie wymiany BOOT i przywrócenie aplikacji przez **RESTORE.BIN**. Sam surowy BIN 32 KiB służy do ST-Linka.
@@ -61,7 +63,7 @@ The factory package uses a recognized factory V9 bootloader; it does not unlock 
 
 ## Zakres publikacji / Publication scope
 
-Wydanie v1.4 publikuje **tylko trzy dystrybucje binarne**, instrukcje, sumy kontrolne i ilustracje. Bez kodu źródłowego, ELF, map, pełnych zrzutów prywatnej drukarki, NVM, OTP i UID. `RESTORE.BIN` w obu ZIP przywraca konkretną oryginalną aplikację **Zortrax 1.6.1/r0323**; nie jest kopią dowolnej poprzedniej aplikacji. Firmware producenta podlega odrębnym prawom.
+Wydanie v1.4 publikuje **trzy dystrybucje binarne firmware**, **dwa publiczne narzędzia hosta w Pythonie** (bez kluczy kryptograficznych), instrukcje, sumy kontrolne i ilustracje. Bez kodu źródłowego, ELF, map, pełnych zrzutów prywatnej drukarki, NVM, OTP i UID. `RESTORE.BIN` w obu ZIP przywraca konkretną oryginalną aplikację **Zortrax 1.6.1/r0323**; nie jest kopią dowolnej poprzedniej aplikacji. Firmware producenta podlega odrębnym prawom.
 
 The v1.4 publication contains only the three binary distributions, documentation, checksums and illustrations. Manufacturer firmware in RESTORE.BIN retains its separate rights. Historical v1.3 packages remain in [SD_INSTALLATION](SD_INSTALLATION/README.md).
 
