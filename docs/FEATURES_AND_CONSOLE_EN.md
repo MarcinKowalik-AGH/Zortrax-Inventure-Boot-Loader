@@ -109,6 +109,8 @@ python3 -m serial.tools.miniterm /dev/cu.YOUR_PORT 250000 --eol LF
 
 Terminal reference: [pySerial miniterm](https://pyserial.readthedocs.io/en/latest/tools.html#serial-tools-miniterm). Exit miniterm with **Ctrl+]**. Only one program should use the port at a time. Switch to 250000 after launching the installer; after launching the user application, do not expect the BOOT console to respond.
 
+**[Practical P4 UART examples: encrypted stock, decoded stock and Klipper](P4_UART_EXAMPLES_EN.md)** — SD and framed UART update walkthroughs.
+
 ## UART commands and responses
 
 Ordinary success is reported as `DONE OK`; errors use `ERROR <code>`. Most commands finish with `READY` and the `INV>` prompt. Successful `BOOT` and `REBOOT` hand off control or reset the device, so they do not finish at the old prompt. Longer operations also produce `PHASE` and `PROGRESS` lines.

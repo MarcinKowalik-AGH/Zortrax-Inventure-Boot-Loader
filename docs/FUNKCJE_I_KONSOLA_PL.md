@@ -109,6 +109,8 @@ python3 -m serial.tools.miniterm /dev/cu.TWOJ_PORT 250000 --eol LF
 
 Dokumentacja terminala: [pySerial miniterm](https://pyserial.readthedocs.io/en/latest/tools.html#serial-tools-miniterm). Wyjście z miniterm: **Ctrl+]**. Tylko jeden program powinien jednocześnie korzystać z danego portu. Po uruchomieniu instalatora przełącz terminal na 250000; po uruchomieniu aplikacji użytkowej nie oczekuj odpowiedzi konsoli BOOT.
 
+**[Praktyczne przykłady konsoli P4: oryginalny zaszyfrowany firmware, odszyfrowana aplikacja i Klipper](KONSOLA_P4_PRZYKLADY_PL.md)** — opis poleceń i transmisji pakietów UART/SD.
+
 ## Komendy UART i odpowiedzi
 
 Zwykłe powodzenie jest oznaczone `DONE OK`, błąd `ERROR <kod>`. Większość poleceń kończy się `READY` i promptem `INV>`. `BOOT` i `REBOOT` po powodzeniu przekazują sterowanie lub resetują urządzenie, więc nie oczekuj zakończenia na starym prompcie. W trakcie dłuższych operacji występują dodatkowo wiersze `PHASE` i `PROGRESS`.
