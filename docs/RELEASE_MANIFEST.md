@@ -1,38 +1,61 @@
-# Inventure boot v1.3 — binary release and publication scope
+# v1.4 P4-PERSIST-r2 — manifest publikacji / publication manifest
 
-**Author:** Marcin Kowalik · mkowalik@agh.edu.pl  
-**Publication:** 2026-10-22  
-**Hardware:** verified Inventure V9, STM32F207, 256 KiB Flash  
-**User-tested installation paths:** (A) from Inventure boot v1.2; (B) from **factory Zortrax bootloader v1.0**. Both resulted in a working original Zortrax application on tested printers.
+**Data / Date:** 2026-10-25  
+**Autor / Author:** Marcin Kowalik · mkowalik@agh.edu.pl  
+**Boot:** Inventure boot v1.4, BUILD P4-PERSIST-r2  
+**Instalator / Installer:** r9898  
+**Sprzęt / Target:** Inventure V9 / STM32F207 / 256 KiB main Flash.
 
-## Distribution files expected
+## Trzy dystrybucje binarne / Three binary distributions
 
-| Installation path | Installation card files |
-| --- | --- |
-| Existing v1.2 | `INVENTUR.IVB`, `RESTORE.BIN`, `ZBACKUP.BIN`, `ZBACK2.BIN` |
-| Factory v1.0 | `InventureUpdate.bin`, `RESTORE.BIN`, `ZBACKUP.BIN`, `ZBACK2.BIN` |
+| Plik / File | B | SHA-256 | Git blob SHA-1 |
+|---|---:|---|---|
+| [Inventure_boot_v1.4_P4_PERSIST_r2_SD_UPGRADE.zip](../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_UPGRADE.zip) | 137282 | `327da4da2c53c6ee49ccb45121b2b973b18c99c93952c2af051d0f4e071c956b` | `d5904c72202d2163cfafb56a289174e5cd8640f1` |
+| [Inventure_boot_v1.4_P4_PERSIST_r2_SD_FACTORY_V9.zip](../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_FACTORY_V9.zip) | 151323 | `050d6531ac875e599dbfe3e79acc99dfb350210dd2d624f2666e8d626c4577b1` | `4e586ff973e3750b5e1061748365f83bf6d4a50b` |
+| [Inventure_boot_v1.4_P4_PERSIST_r2_FULL_32KiB_0x08000000.bin](../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_FULL_32KiB_0x08000000.bin) | 32768 | `9ffd140879b6946bed63928fba3ff7b38ff3db289710a2e0845eecbd9caf10ea` | `f2ef16dc500a3398e082a0a993e3222d45ba98b2` |
 
-A standalone **32-KiB** `Inventure_boot_v1.3_FULL_32KiB_0x08000000.bin` is for **SWD/ST-Link**, not an application updater. It cannot be installed by renaming it to `InventureUpdate.bin`.
+Oba ZIP zawierają wyłącznie cztery pliki binarne: właściwy instalator, RESTORE.BIN i dwa prealokowane miejsca na kopie BOOT. Nie zawierają źródeł, narzędzi, ELF, map, raportów wewnętrznych ani prywatnych zrzutów. Osobny BIN ma dokładnie 32768 B. Sumy dotyczą niezmienionych plików przekazanych właścicielowi przed jego potwierdzoną próbą.
 
-The application restore image `RESTORE.BIN` is derived from original manufacturer firmware and is subject to rights separate from this third-party bootloader. **Do not redistribute proprietary manufacturer firmware without appropriate rights.** For a redistributable release, the user should supply their own compatible official image and verify its hash.
+Both ZIPs contain exactly four binary files: their respective installer, RESTORE.BIN and two preallocated BOOT backup slots. The standalone BIN is 32768 bytes. These are the unchanged binaries delivered before the owner's successful hardware report.
 
-Test records from project work: **1099/1099** v1.3 offline tests, **11/11** installer tests, ARM integrity checks. The user has subsequently confirmed both installer paths on hardware. Other newly added v1.3 features (e.g. UART dumps, reset threshold and bulk backup) are not yet individually confirmed by a hardware test report.
+**BOOT SHA-256:** `9ffd140879b6946bed63928fba3ff7b38ff3db289710a2e0845eecbd9caf10ea`. Prefix 32512 B SHA-256: `f7162464e699aa17b3768a42cad5ec18708debf41b2c1183ea98e522bac73830`. The canonical final 256 bytes are FF; that region becomes the saved P4 journal. FULL uses 32508 B and ends at **0x08007EFC**, leaving 4 B before the journal at **0x08007F00–0x08007FFF**.
 
-## Security/privacy and source exclusion
+RESTORE.BIN is the fixed **Zortrax 1.6.1/r0323** application payload, **164864 B**, SHA-256 `1368bdbddad941a8f7c025715946662a34d3def442d0d3c00af4315b54c8ba17`. It is not a backup of an arbitrary user's previously installed application. Manufacturer firmware retains separate rights and licensing.
 
-**Only installation binaries authorized for redistribution and documentation are suitable for this public repository.** No C/ASM source, `.elf`, `.map`, build system, disassembly, cryptographic secrets, full 256-KiB printer dumps, NVM calibration, OTP, UID, option-byte snapshots, private backups, or internal reverse-engineering reports. No manufacturer firmware unless explicitly authorized for redistribution.
+## Status sprzętowy / Hardware report
 
-Never assume that a successful GitHub upload means a physical firmware update is risk-free. Replacing boot sectors carries an unavoidable power-loss risk and may require SWD recovery.
+**25.10.2026, po dostarczeniu r2:** właściciel napisał: „ok wgrałem do drukarki i przetestowałem opcje działa bez problemu”. Odnosi się to do końcowej v1.4 **P4-PERSIST-r2**, z podmenu UART, oryginalnym fontem i trwałym zapisem P4. Od tej próby nie zmieniono binariów.
 
-## Verified public SD release packages
+The owner's report confirms installation and operation of the tested r2 build. It does not enumerate a separate test of every baud rate, long-duration retention, electrical measurements, power-loss cases, or all three programming routes. Those detailed results are not invented here.
 
-The repository contains **both complete binary-only SD installation archives**, committed to public `main` under `SD_INSTALLATION/`. The uploaded ZIP Git object hashes were checked against the exact local archive bytes.
+**History:** the earlier repository recorded successful physical v1.2→v1.3 SD upgrade and factory-Zortrax→v1.3 SD installation followed by stock application restore and boot. Those remain v1.3 results, not new claims that both r9898 routes were separately exercised during the latest r2 report.
 
-| Package | Archive | Bytes | ZIP SHA-256 | Git blob SHA-1 |
-| --- | --- | ---: | --- | --- |
-| v1.2 → v1.3 | [upgrade ZIP](../SD_INSTALLATION/01_UPGRADE_v1.2_to_v1.3/Inventure_boot_v1.3_SD_Z_v1.2_JEDNA_KARTA.zip) | 136276 | `1acb7a734263fd38046f89c4cb6e510454f69e5701885fa1d459f1f805e0ca9a` | `bd941135fcad1a37ff365369aeb599021050e1b9` |
-| Factory v1.0 → v1.3 | [factory ZIP](../SD_INSTALLATION/02_FACTORY_ZORTRAX_v1.0_to_v1.3/Inventure_boot_v1.3_SD_FABRYCZNA_V9_JEDNA_KARTA.zip) | 151963 | `69e1c943284dd23d1cff71b07c6d57dea67d8cdeecc6df69a9045638ec017319` | `6bda427921aaf2c2968c6a8fe3c0f9bbbe0de28b` |
+## Walidacja programowa / Software validation
 
-Each ZIP contains only its installer payload, `RESTORE.BIN` and two preallocated backup slots. No bootloader/installer source, ELF, map or private dump is included. The original Zortrax application payload in `RESTORE.BIN` remains subject to separate manufacturer rights and licensing.
+| Sprawdzenie / Check | Wynik / Result |
+|---|---:|
+| Bootloader native/model tests | 2395/2395 |
+| Bootloader tests after clean-source extraction and rebuild | 2395/2395 |
+| ARM bounds / SRAM / vectors / variant checks | 99/99 |
+| r9898 installer tests | 157/157 |
+| Installer tests after clean-source extraction and rebuild | 157/157 |
+| Cross-version package/stock compatibility assertions | 1604/1604 |
+| Native ASan/UBSan/bounds exercises | 4 × 20000 iterations, PASS |
 
-For extraction, copy-to-SD steps, hardware checks, physical confirmation and restoring the application, see [bilingual SD installer guide](../SD_INSTALLATION/README.md).
+All compared BOOT BIN/ELF variants and six installer artifacts rebuilt byte for byte. No failures, errors or skips remain in final pytest reports. These totals overlap in scope and are not added as independent hardware tests.
+
+Font evidence: 120 original r0323 glyphs plus the project's custom bullet; exact widths and row pixels checked, including all 65536 BMP lookups. All 9 ring frames remain exact. Menu actions, both Back transitions, chevron direction, P4 storage and readback constraints were checked.
+
+## Rozpoznawanie i warunki / Recognition and conditions
+
+r9898 preserves nine historical complete BOOT hashes and recognizes exact immutable prefixes for released r1 and r2. Saved/torn P4 journal bytes are permitted only for those exact prefixes. Both backup files must still match all 32768 current bytes. Version text alone is insufficient; `UNRECOGNIZED BOOT IMAGE` must not be bypassed.
+
+Factory BOOT reference: SHA-256 `19640ae302d918a79a243dbc7a5efcf055f78a1b459af4b50f3e66575af81752`. A matching factory BOOT is not the only condition: the installer also requires RDP0, writable sectors 0–1, the expected MCU/Flash environment, a suitable supply, the two exact backups and valid RESTORE. The complete SD route also requires writable APP sectors 4–5. Check these conditions before starting: the first stage replaces APP before r9898 checks permission to replace BOOT. The installer never changes option bytes or disables protection.
+
+Every canonical BOOT installation resets the P4 journal to default **250000**. Normal application updates preserve it. The installer itself uses 250000, 8N1 regardless of a previously saved bootloader-console rate.
+
+## Dokumentacja i ilustracje / Documentation and illustrations
+
+The illustrated [Polish](INSTALACJA_PL.md) and [English](INSTALLATION_EN.md) manuals cover factory SD, custom-BOOT upgrade and ST-Link. OLED images are generated from the actual native C renderers. Installer status screens are captured from native backup/install/confirmation runs with a simulated SD/Flash backend; selected menu states are rendered using actual labels. They are not photographs or proof of new physical runs. r9898 uses its existing font; the new bootloader uses the original stock proportional font.
+
+Publication adds only the three binary distributions, checksums, manuals and their PNG illustrations. No production source code, assembler, ELF, map, linker scripts, cryptographic analysis, unique printer dump, NVM, OTP, UID or option-byte snapshot is published. Existing historical v1.3 ZIPs remain unchanged.

@@ -1,62 +1,65 @@
-# Inventure boot v1.3 — Zortrax Inventure V9
+# Inventure boot v1.4 — Zortrax Inventure V9
 
-**Independent, third-party service bootloader — firmware installation binaries and manuals.**  
-**Author / Autor:** Marcin Kowalik · mkowalik@agh.edu.pl  
-**Tested board / Testowana płyta:** Inventure V9, STM32F207, 256 KiB Flash.
+**Independent service bootloader · Build P4-PERSIST-r2 · SD installer r9898**  
+**Autor / Author:** Marcin Kowalik · mkowalik@agh.edu.pl  
+**Platforma / Target:** sprawdzona płyta Inventure V9, STM32F207, 256 KiB Flash.
 
-[English installation manual](docs/INSTALLATION_EN.md) · [Instrukcja instalacji po polsku](docs/INSTALACJA_PL.md)  
-[English features & UART commands](docs/FEATURES_AND_CONSOLE_EN.md) · [Funkcje i konsola po polsku](docs/FUNKCJE_I_KONSOLA_PL.md)  
-[Release manifest & publication scope](docs/RELEASE_MANIFEST.md)
+## Pobierz v1.4 / Download
 
-## Hardware status / Testy sprzętowe
+| Co jest obecnie w drukarce? / Current installation | Pakiet / Package |
+|---|---|
+| Własny Inventure boot v1.2 / v1.3 / wcześniejsza v1.4, rozpoznany przez instalator | **[SD_UPGRADE — aktualizacja / upgrade](firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_UPGRADE.zip)** |
+| Oryginalny bootloader Zortrax na zgodnej V9; spełnione warunki zapisu RDP0 i niezabezpieczonych sektorów BOOT 0–1 oraz APP 4–5 | **[SD_FACTORY_V9 — instalacja fabryczna / factory route](firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_FACTORY_V9.zip)** |
+| ST-Link / SWD z dostępnym odczytem i zapisem Flash | **[BIN 32 KiB — adres 0x08000000](firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_FULL_32KiB_0x08000000.bin)** |
 
-**Confirmed by the project owner on physical printers:**
+**[Pełna instrukcja krok po kroku z ekranami — polski](docs/INSTALACJA_PL.md)**  
+**[Complete illustrated installation manual — English](docs/INSTALLATION_EN.md)**
 
-1. **Upgrade from Inventure boot v1.2 to v1.3 using SD.**
-2. **Installation from original factory Zortrax bootloader v1.0 to Inventure boot v1.3 using SD**, followed by restoring and starting the original Zortrax application.
+[Funkcje i konsola](docs/FUNKCJE_I_KONSOLA_PL.md) · [Features and console](docs/FEATURES_AND_CONSOLE_EN.md) · [SHA-256](firmware/v1.4/SHA256SUMS.txt) · [Manifest i status prób / Manifest and test status](docs/RELEASE_MANIFEST.md)
 
-**Potwierdzono na rzeczywistych drukarkach:** oba scenariusze instalacji — aktualizację naszego v1.2 do v1.3 oraz instalację z fabrycznego bootloadera Zortrax v1.0. Po przywróceniu firmware fabryczna aplikacja uruchomiła się prawidłowo.
+W każdym ZIP na SD są **cztery pliki binarne**. Rozpakuj ZIP na komputerze i skopiuj pliki do katalogu głównego karty FAT32. Wgranie przez SD obejmuje tymczasową aplikację instalatora, dwie sprawdzone kopie bieżącego BOOT, osobne potwierdzenie wymiany BOOT i przywrócenie aplikacji przez **RESTORE.BIN**. Sam surowy BIN 32 KiB służy do ST-Linka.
 
-These tests validate both installation paths **on the tested printers**, not universal compatibility with all board versions or every advanced diagnostic feature.
+Each SD ZIP contains **four binary files**. Extract on the computer and copy the files to FAT32 SD root. The SD route installs a temporary service application, verifies two current-BOOT backups, separately confirms BOOT replacement, and then restores the application from **RESTORE.BIN**. The standalone 32-KiB BIN is for ST-Link.
 
-## What it does / Funkcje
+## Potwierdzone działanie / Hardware feedback
 
-- **3-second interruptible autoboot** of a validated installed application; any front-panel key enters the maintenance menu.
-- English OLED menu with UP / DOWN / OK navigation, **Back** on submenus and `© Marcin Kowalik` branding.
-- Read, decrypt, verify and install compatible Zortrax firmware from FAT32 SD, with explicit confirmation.
-- Avoid unnecessary rewrites when the selected firmware is already installed.
-- Browse up to 16 update files on SD; checksum/progress feedback.
-- Backup Flash/identity metadata to preallocated files; backup verification.
-- Hardware diagnostics, reset reason and recovery latch, service-event history.
-- UART6 service console at **250000 baud, 8N1**, including read-only information and binary memory export commands.
-- Author information in OLED About / UART INFO.
+**25.10.2026:** właściciel projektu potwierdził po wgraniu tej kompilacji v1.4: „wgrałem do drukarki i przetestowałem opcje działa bez problemu”. Publikowane trzy pakiety zawierają ten sam sprawdzony obraz BOOT. Nie zmieniono binariów po tej próbie.
 
-## Installation variants
+**25 October 2026:** the owner reported installing this v1.4 build and testing its options without problems. All three packages contain that same BOOT image; the binaries were not changed after that report.
 
-| Printer at the start | First-stage installer | Instructions |
-| --- | --- | --- |
-| Running **Inventure boot v1.2** | `INVENTUR.IVB` plus `RESTORE.BIN`, `ZBACKUP.BIN`, `ZBACK2.BIN` | [English](docs/INSTALLATION_EN.md) / [Polski](docs/INSTALACJA_PL.md) |
-| Running **factory Zortrax bootloader v1.0** on verified V9 | `InventureUpdate.bin` plus the same other three files | [English](docs/INSTALLATION_EN.md) / [Polski](docs/INSTALACJA_PL.md) |
+Wcześniej potwierdzono na drukarkach obie drogi instalacji **v1.3**: upgrade v1.2 → v1.3 oraz fabryczny bootloader → v1.3, z przywróceniem oryginalnej aplikacji. Aktualne potwierdzenie r2 nie określa osobno testów wszystkich trzech metod programowania. Zakres prób i ograniczenia opisuje manifest.
 
-The first stage replaces the **application** with a service installer, the second stage saves and verifies two bootloader backups and installs new boot sectors, and the final stage restores an original compatible application. **A raw 32-KiB bootloader BIN is not an ordinary SD application update.**
+Offline: **2395/2395** bootloader tests, **99/99** ARM checks, **157/157** installer tests and **1604/1604** compatibility assertions. Clean-source rebuilds reproduce all compared images byte for byte.
 
-## Download v1.3 installers / Pobierz instalatory SD
+## Zmiany v1.4 / What is new
 
-**Both installations have been successfully tested by the project owner on physical Inventure printers.** Download the archive appropriate to the **current** bootloader, extract it, then copy its four files — not the ZIP file — to the **root directory of a FAT32 SD card**.
+- **Diagnostics → UART** tuż za Display test; w środku **UART test** i **P4 baud rate**.
+- **Trwała prędkość P4:** 19200, 57600, 115200, 250000 lub 500000, odtwarzana po resecie i wyłączeniu zasilania.
+- **UP + DOWN podczas startu:** awaryjne 250000 bez nadpisania zapisanego wyboru.
+- Oryginalna proporcjonalna czcionka bitmapowa r0323; **Back w lewo**, pozostałe wskaźniki w prawo, Back widoczny przy przewijaniu.
+- **5-sekundowy autostart**, oryginalny pierścień postępu i czytelny wynik operacji przez 3 s.
+- Zachowane aktualizacje aplikacji SD/UART, sprawdzanie i pomijanie identycznego firmware, przeglądarka plików, kopie, diagnostyka i historia.
 
-| Existing bootloader / Obecny bootloader | Download / Pobierz | Files to copy to SD |
-| --- | --- | --- |
-| **Inventure boot v1.2** (upgrade / aktualizacja) | **[Download SD installer for v1.2 → v1.3](SD_INSTALLATION/01_UPGRADE_v1.2_to_v1.3/Inventure_boot_v1.3_SD_Z_v1.2_JEDNA_KARTA.zip)** | `INVENTUR.IVB`, `RESTORE.BIN`, `ZBACKUP.BIN`, `ZBACK2.BIN` |
-| **Factory Zortrax v1.0** (oryginalny bootloader) | **[Download SD installer for factory v1.0 → v1.3](SD_INSTALLATION/02_FACTORY_ZORTRAX_v1.0_to_v1.3/Inventure_boot_v1.3_SD_FABRYCZNA_V9_JEDNA_KARTA.zip)** | `InventureUpdate.bin`, `RESTORE.BIN`, `ZBACKUP.BIN`, `ZBACK2.BIN` |
+![UART i zapis prędkości w v1.4](docs/images/v1.4/sd-06-uart.png)
 
-**[Step-by-step SD installation / Instalacja przez SD — English & Polski](SD_INSTALLATION/README.md)**
+*Ekrany w instrukcji są renderami rzeczywistego kodu interfejsu; nie są fotografiami drukarki. / Manual illustrations are renders of the actual UI code, not photographs.*
 
-The first stage installs a temporary service application; that application creates and verifies **two backups of the current bootloader** before changing sectors 0–1, after separate physical confirmation. The last stage restores original compatible Zortrax application from `RESTORE.BIN`. **Do not omit the restore step.** Be aware of power-loss risk and hardware compatibility limitations.
+## Po wgraniu / After installation
 
-**No source code is published.** Only binary installation archives and manuals are included, without C/ASM, ELF, maps, private memory dumps, OTP or UID. `RESTORE.BIN` contains a manufacturer application payload subject to separate Zortrax rights and licensing; users must ensure lawful use and distribution.
+**Każda instalacja tego BOOT odnawia dziennik P4 i zaczyna od 250000, 8N1.** Ustaw ponownie swoją prędkość w **Diagnostics → UART → P4 baud rate**. Zwykłe późniejsze aktualizacje aplikacji zachowują ten zapis. Instalator r9898 ma własne stałe 250000, 8N1.
 
-## Risks / Ryzyko
+Every installation of this BOOT image resets its P4 journal to **250000, 8N1**. Select your preferred rate again after installation. Later ordinary application updates preserve it. The r9898 installer itself uses 250000, 8N1.
 
-**Replacing bootloader sectors 0–1 is not power-loss-safe.** Losing power at the critical erase/program phase can require **ST-Link/SWD recovery**. Two backups on the same SD are not independent backups. Use stable power, confirmed motherboard identity and a recovery plan; never bypass unknown-hardware checks or use mass erase. The owner-tested installation paths do not justify assumptions about other Inventure board revisions.
+## Warunki instalacji / Installation conditions
 
-Third-party project, not affiliated with or endorsed by Zortrax.
+Pakiet factory oznacza ścieżkę wejścia przez **rozpoznany fabryczny BOOT V9**. Nie jest narzędziem wyłączania ochrony. Instalator przed zapisem wymaga **RDP0** i prawa zapisu sektorów BOOT 0–1; cały przebieg SD wymaga również zapisywalnych sektorów APP 4–5. Warunki trzeba potwierdzić przed uruchomieniem instalatora; przy odmowie zakończ procedurę. Nie używaj **Mass Erase**, `-rdu` ani zmiany Option Bytes jako sposobu obejścia błędu. Zmiana RDP1 → RDP0 może skasować główną Flash wraz z NVM. Podczas wymiany BOOT zasilanie musi być stabilne; przerwanie może wymagać odzyskania przez SWD.
+
+The factory package uses a recognized factory V9 bootloader; it does not unlock read or write protection. The installer requires **RDP0** and writable BOOT sectors 0–1; the complete SD route also needs writable APP sectors 4–5. Verify these conditions before starting. Do not bypass a rejection with mass erase, `-rdu` or option-byte changes. Follow the conditions and readback procedure in the manual.
+
+## Zakres publikacji / Publication scope
+
+Wydanie v1.4 publikuje **tylko trzy dystrybucje binarne**, instrukcje, sumy kontrolne i ilustracje. Bez kodu źródłowego, ELF, map, pełnych zrzutów prywatnej drukarki, NVM, OTP i UID. `RESTORE.BIN` w obu ZIP przywraca konkretną oryginalną aplikację **Zortrax 1.6.1/r0323**; nie jest kopią dowolnej poprzedniej aplikacji. Firmware producenta podlega odrębnym prawom.
+
+The v1.4 publication contains only the three binary distributions, documentation, checksums and illustrations. Manufacturer firmware in RESTORE.BIN retains its separate rights. Historical v1.3 packages remain in [SD_INSTALLATION](SD_INSTALLATION/README.md).
+
+Independent project; not affiliated with or endorsed by Zortrax.
