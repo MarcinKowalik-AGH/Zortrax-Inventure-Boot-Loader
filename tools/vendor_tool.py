@@ -21,6 +21,7 @@ from pathlib import Path
 import re
 import struct
 import sys
+from typing import Optional
 
 import ibtool
 
@@ -56,7 +57,7 @@ KNOWN = {
 }
 
 
-def inspect_and_normalize(blob: bytes) -> tuple[dict, bytes | None]:
+def inspect_and_normalize(blob: bytes) -> tuple[dict, Optional[bytes]]:
     if blob.startswith(ibtool.MAGIC):
         report = ibtool.inspect(blob)
         report.update(input_kind="IVB_ALREADY_PACKAGED", key_free=True)

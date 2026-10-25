@@ -29,7 +29,7 @@ Dodano **dwa skrypty hosta**; nie zmieniono żadnego z trzech opublikowanych obr
 | Skrypt | SHA-256 | Zakres |
 |---|---|---|
 | [`tools/ibtool.py`](../tools/ibtool.py) | `d23c6d0f3dd097dabed548f5ba1f3b87f91d13fd7d28b2c3c294a377faabd254` | IVB pack/inspect/serial, transmisja IBD1 |
-| [`tools/vendor_tool.py`](../tools/vendor_tool.py) | `b4aa83ea6fe13dc24a690597946100928c63d2d803beccfa14a00f9e4c119deb` | Sprawdzenie SHA-256 ośmiu znanych, **już odszyfrowanych** APP, pakowanie IVB, inspekcja metadanych ZRTX |
+| [`tools/vendor_tool.py`](../tools/vendor_tool.py) | `0c03dd74b4e763cf68b96325150bf01d2110a808a427e34fe8a792370cb377a8` | Sprawdzenie SHA-256 ośmiu znanych, **już odszyfrowanych** APP, pakowanie IVB, inspekcja metadanych ZRTX |
 
 Public tools include **no encryption/decryption keys, no HMAC signing key, no stored tail20 bytes, and no tail synthesis**. Encrypted ZRTX conversion to IVB is deliberately unavailable; install supported encrypted stock packages via the SD route. Already-decrypted raw stock wrapped as IVB is a **custom-manifest representation**, not exact vendor-tail restoration. Full pre-existing plaintext vendor payloads are accepted only by complete SHA-256 allowlist match. Host-tool checks were conducted offline; not separate flash hardware tests.
 
