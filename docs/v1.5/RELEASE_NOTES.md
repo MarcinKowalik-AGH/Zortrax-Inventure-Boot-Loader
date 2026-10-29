@@ -10,7 +10,7 @@ Wydanie / Release 29.10.2026. Zortrax Inventure V9 / STM32F207 / 256 KiB.
 
 **SD routes must restore APP afterwards using the supplied RESTORE.BIN** (stock 1.6.1/r0323). BOOT replacement resets P4 to 250000 8N1. ST-Link writes sectors 0–1 only. No Mass Erase, read-unprotect or option-byte changes to bypass refusals.
 
-v1.4 artifacts and manuals remain available in the repository. Their retention does not guarantee that the old installer accepts HW2 for downgrade. Private complete archives, BOOT/installer sources, ELF/map files, standalone fonts and printer-unique data are not published. Existing public key-free host scripts remain unchanged.
+v1.4 artifacts and manuals remain available in the repository. Their retention does not guarantee that the old installer accepts HW2 for downgrade. Private complete archives, BOOT/installer sources, ELF/map files, standalone fonts and printer-unique data are not published. Public key-free host-tool executable logic remains unchanged; only the ibtool.py help heading now explicitly mentions v1.5.
 
 Recorded HW2 software evidence: 3070 BOOT tests, 250 installer tests, 99 ARM/static checks, 120 exact stock glyphs, 10 byte-identical rebuild artifacts. These are archived build results, not new physical tests performed during publication.
 
