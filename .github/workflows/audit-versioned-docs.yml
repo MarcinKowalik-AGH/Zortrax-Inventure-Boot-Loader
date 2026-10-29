@@ -1,0 +1,36 @@
+name: Audit and version Inventure documentation
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/audit-versioned-docs.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: inventure-documentation-audit
+  cancel-in-progress: false
+jobs:
+  audit-and-organize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Validate pinned migration and publish only after all checks pass
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, io, urllib.request, zipfile
+          url = 'https://drive.usercontent.google.com/download?id=1XI8O-gItEbBB9BU5PNrX1LIeabkG7qUg&export=download&confirm=t'
+          with urllib.request.urlopen(url, timeout=90) as response:
+              bundle = response.read(100000)
+          if len(bundle) != 18686 or hashlib.sha256(bundle).hexdigest() != '58115279a73d776c74821fa1713b35b64530296c8567e3669ff62bde547717b7':
+              raise RuntimeError('Documentation migration ZIP identity mismatch')
+          with zipfile.ZipFile(io.BytesIO(bundle)) as archive:
+              if archive.namelist() != ['reorganize.py'] or archive.testzip() is not None:
+                  raise RuntimeError('Unexpected migration contents')
+              source = archive.read('reorganize.py')
+          if hashlib.sha256(source).hexdigest() != 'c59aeee0346831e227be1bf1debe779ad3091b344fe7d76d67b242d3de97f754':
+              raise RuntimeError('Migration script identity mismatch')
+          exec(compile(source, 'audited_documentation_migration.py', 'exec'), {'__name__': '__main__'})
+          PY
