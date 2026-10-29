@@ -1,0 +1,49 @@
+{
+  "build": "RELEASE 1.5-HW2",
+  "publication_date": "2026-10-29",
+  "hardware_feedback": {
+    "printers": 1,
+    "source": "owner statement in project conversation",
+    "routes_individually_confirmed": false,
+    "permanent_boot_hardware_reads_actual_printer_data": true,
+    "hardware_readout_evidence": "Explicit owner confirmation on the physical printer, 2026-10-29"
+  },
+  "archived_test_xml_counts": {
+    "BOOT_FINAL.xml": {
+      "tests": 3070,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "INSTALLER_FINAL.xml": {
+      "tests": 250,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "new_checks": {
+    "binary_sha256_verified": true,
+    "sd_zip_crc_verified": true,
+    "sd_exact_four_files": true,
+    "restore_same_in_both": true,
+    "ivb_payload_sha256_verified": true,
+    "ivb_embedded_boot_equals_stlink": true,
+    "canonical_p4_journal_all_ff": true,
+    "packaged_installers_equal_private_reference": true
+  },
+  "firmware": {
+    "Inventure_boot_v1.5_HW2_STOCK_FONT_2026-10-29_SD_UPGRADE.zip": {
+      "bytes": 140406,
+      "sha256": "85640a127cd16fab1b24a8b8f69d3bf6c251865ab81df5223180a1ea8a209b85"
+    },
+    "Inventure_boot_v1.5_HW2_STOCK_FONT_2026-10-29_SD_FACTORY_V9.zip": {
+      "bytes": 154971,
+      "sha256": "3967bc324adfea5cfd374a5fbd1066877acece59f0f2d65be02fffd6326856e0"
+    },
+    "Inventure_boot_v1.5_HW2_STOCK_FONT_2026-10-29_STLINK_32KiB_0x08000000.bin": {
+      "bytes": 32768,
+      "sha256": "2d15e63a3db37bafb1f36d386d59b11c0d3d19f4d561b460b87e5201ab09b933"
+    }
+  }
+}

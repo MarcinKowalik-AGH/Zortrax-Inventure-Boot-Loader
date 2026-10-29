@@ -1,70 +1,63 @@
-# Inventure boot v1.4 — Zortrax Inventure V9
+# Inventure boot v1.5 — RELEASE 1.5-HW2
 
-**Independent service bootloader · Build P4-PERSIST-r2 · SD installer r9898**  
-**Autor / Author:** Marcin Kowalik · mkowalik@agh.edu.pl  
-**Platforma / Target:** sprawdzona płyta Inventure V9, STM32F207, 256 KiB Flash.
+**Zortrax Inventure V9 · STM32F207 · 256 KiB Flash**  
+Autor / Author: **Marcin Kowalik**, mkowalik@agh.edu.pl  
+Aktualne wydanie / Current release: **v1.5**, kompilacja / build **RELEASE 1.5-HW2**, 29.10.2026.
 
-## Pobierz v1.4 / Download
+## Pobierz / Download
 
-| Co jest obecnie w drukarce? / Current installation | Pakiet / Package |
+| Stan drukarki / Current state | Właściwy plik / Correct file |
 |---|---|
-| Własny Inventure boot v1.2 / v1.3 / wcześniejsza v1.4, rozpoznany przez instalator | **[SD_UPGRADE — aktualizacja / upgrade](firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_UPGRADE.zip)** |
-| Oryginalny bootloader Zortrax na zgodnej V9; spełnione warunki zapisu RDP0 i niezabezpieczonych sektorów BOOT 0–1 oraz APP 4–5 | **[SD_FACTORY_V9 — instalacja fabryczna / factory route](firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_FACTORY_V9.zip)** |
-| ST-Link / SWD z dostępnym odczytem i zapisem Flash | **[BIN 32 KiB — adres 0x08000000](firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_FULL_32KiB_0x08000000.bin)** |
+| Rozpoznany własny Inventure boot, także v1.4 / Recognized custom bootloader including v1.4 | **[SD UPGRADE — aktualizacja](firmware/v1.5/Inventure_boot_v1.5_HW2_STOCK_FONT_2026-10-29_SD_UPGRADE.zip)** |
+| Zgodny fabryczny BOOT V9, spełnione warunki zapisu / Compatible original BOOT V9 with write prerequisites met | **[FROM FACTORY — SD_FACTORY_V9](firmware/v1.5/Inventure_boot_v1.5_HW2_STOCK_FONT_2026-10-29_SD_FACTORY_V9.zip)** |
+| Dostęp SWD / ST-Link | **[ST-LINK — 32 KiB, 0x08000000](firmware/v1.5/Inventure_boot_v1.5_HW2_STOCK_FONT_2026-10-29_STLINK_32KiB_0x08000000.bin)** |
 
-**[Pełna instrukcja krok po kroku z ekranami — polski](docs/INSTALACJA_PL.md)**  
-**[Complete illustrated installation manual — English](docs/INSTALLATION_EN.md)**
+[SHA-256 v1.5](firmware/v1.5/SHA256SUMS.txt) · [Manifest i status testów](docs/v1.5/RELEASE_MANIFEST.md)
 
-**[Konsola P4 — komendy i przykłady aktualizacji ZRTX, odszyfrowanej APP i Klippera](docs/KONSOLA_P4_PRZYKLADY_PL.md)**  
-**[P4 UART console and firmware examples — English](docs/P4_UART_EXAMPLES_EN.md)**
+**[Pełna instrukcja po polsku — trzy metody i ekrany](docs/v1.5/INSTALACJA_PL.md)**  
+**[Complete English installation manual — all three routes](docs/v1.5/INSTALLATION_EN.md)**  
+[Funkcje i konsola P4 / Features and P4](docs/v1.5/FUNKCJE_I_KONSOLA.md) · [Przykłady aktualizacji APP / APP examples](docs/v1.5/P4_EXAMPLES.md)
 
-**Publiczne skrypty PC / Public PC-side tools:** [`tools/ibtool.py`](tools/ibtool.py) — tworzenie, kontrola i ramkowe przesyłanie IVB przez P4; [`tools/vendor_tool.py`](tools/vendor_tool.py) — bezkluczowa kontrola/pakowanie **już odszyfrowanych** rozpoznanych aplikacji. **Nie ma kluczy AES/HMAC, funkcji odtwarzania tail20 ani odszyfrowywania ZRTX.** Zaszyfrowane oryginalne aktualizacje wgrywa się przez SD.
+## Potwierdzenie na drukarce / Hardware feedback
 
-[Funkcje i konsola](docs/FUNKCJE_I_KONSOLA_PL.md) · [Features and console](docs/FEATURES_AND_CONSOLE_EN.md) · [SHA-256](firmware/v1.4/SHA256SUMS.txt) · [Manifest i status prób / Manifest and test status](docs/RELEASE_MANIFEST.md)
+**29.10.2026:** właściciel zgłosił po wgraniu tej paczki: „wgrałem na 1 drukarkę jest wszystko ok”. Publikacja zachowuje **dokładnie te same binaria**. Jest to potwierdzenie działania na **jednej drukarce**, nie osobny test wszystkich trzech metod, wszystkich prędkości ani awarii zasilania.
 
-W każdym ZIP na SD są **cztery pliki binarne**. Rozpakuj ZIP na komputerze i skopiuj pliki do katalogu głównego karty FAT32. Wgranie przez SD obejmuje tymczasową aplikację instalatora, dwie sprawdzone kopie bieżącego BOOT, osobne potwierdzenie wymiany BOOT i przywrócenie aplikacji przez **RESTORE.BIN**. Sam surowy BIN 32 KiB służy do ST-Linka.
+The owner reported successful installation and operation on **one printer**. The tested binaries are published unchanged; this report does not certify every installation route or failure mode.
 
-Each SD ZIP contains **four binary files**. Extract on the computer and copy the files to FAT32 SD root. The SD route installs a temporary service application, verifies two current-BOOT backups, separately confirms BOOT replacement, and then restores the application from **RESTORE.BIN**. The standalone 32-KiB BIN is for ST-Link.
+Instalator nadal wypisuje historyczny banner `V1.5 HW2 - HW UNTESTED`, zapisany przed tą próbą. Nie przekompilowano go tylko w celu zmiany napisu. Aktualny status opisuje manifest; identyfikuj pakiet pełną sumą SHA-256, nie samym `r9898`.
 
-## Potwierdzone działanie / Hardware feedback
+**Hardware — potwierdzone na urządzeniu:** 29.10.2026 właściciel dodatkowo potwierdził, że ekran Hardware w stałym bootloaderze **poprawnie odczytuje rzeczywiste dane jego drukarki**. Nie jest to jedynie wynik testu modelowego. Ilustracje w instrukcji nadal zawierają jawnie syntetyczne dane przykładowe; nie są zrzutem prywatnych danych użytkownika.
 
-**25.10.2026:** właściciel projektu potwierdził po wgraniu tej kompilacji v1.4: „wgrałem do drukarki i przetestowałem opcje działa bez problemu”. Publikowane trzy pakiety zawierają ten sam sprawdzony obraz BOOT. Nie zmieniono binariów po tej próbie.
+**Hardware — physically confirmed:** on 29 October 2026 the owner explicitly confirmed that the permanent bootloader Hardware screen **correctly reads the actual printer data** on his device. This is an on-device confirmation, not just a model test. Manual previews still use clearly synthetic examples rather than private printer data.
 
-**25 October 2026:** the owner reported installing this v1.4 build and testing its options without problems. All three packages contain that same BOOT image; the binaries were not changed after that report.
+## Co zmienia v1.5-HW2 / Changes
 
-Wcześniej potwierdzono na drukarkach obie drogi instalacji **v1.3**: upgrade v1.2 → v1.3 oraz fabryczny bootloader → v1.3, z przywróceniem oryginalnej aplikacji. Aktualne potwierdzenie r2 nie określa osobno testów wszystkich trzech metod programowania. Zakres prób i ograniczenia opisuje manifest.
+- **Oryginalna czcionka Inventure r0323, bez skalowania**, wspólna dla BOOT i instalatora. / Original unscaled stock font in both programs.
+- **Hardware** w `Diagnostics` bootloadera i menu instalatora: model, wersja sprzętowa i numer z OTP, **Print time** z NVM; `Unavailable` przy braku wiarygodnych danych. / Real read-only device information.
+- **Menu bez zawijania**, zapamiętane okno listy, przypięty `Back`, brak mylenia `Backup` z `Back`. / Non-wrapping, stateful list navigation.
+- Przesyłanie zmienionego prostokąta OLED zamiast powtarzania pełnej klatki. / Partial display transfers after the first full frame.
+- Bezstratna kompresja tekstów: wszystkie funkcje pozostają; **80 B zapasu** przed dziennikiem P4. / Lossless text storage optimization without removing features.
 
-Offline: **2395/2395** bootloader tests, **99/99** ARM checks, **157/157** installer tests and **1604/1604** compatibility assertions. Clean-source rebuilds reproduce all compared images byte for byte.
+![Ekrany bootloadera i instalatora v1.5](docs/images/v1.5/overview.png)
 
-## Zmiany v1.4 / What is new
+*Rendery rzeczywistego kodu C, nie fotografie. Dane Hardware na planszach są syntetyczne. / Native C renders, not photographs; shown device data are synthetic.*
 
-- **Diagnostics → UART** tuż za Display test; w środku **UART test** i **P4 baud rate**.
-- **Trwała prędkość P4:** 19200, 57600, 115200, 250000 lub 500000, odtwarzana po resecie i wyłączeniu zasilania.
-- **UP + DOWN podczas startu:** awaryjne 250000 bez nadpisania zapisanego wyboru.
-- Oryginalna proporcjonalna czcionka bitmapowa r0323; **Back w lewo**, pozostałe wskaźniki w prawo, Back widoczny przy przewijaniu.
-- **5-sekundowy autostart**, oryginalny pierścień postępu i czytelny wynik operacji przez 3 s.
-- Zachowane aktualizacje aplikacji SD/UART, sprawdzanie i pomijanie identycznego firmware, przeglądarka plików, kopie, diagnostyka i historia.
+## Ważne przed instalacją / Important
 
-![UART i zapis prędkości w v1.4](docs/images/v1.4/sd-06-uart.png)
+Oba ZIP-y SD mają po **cztery pliki**, do rozpakowania do głównego katalogu FAT32. Procedura SD tymczasowo zastępuje aplikację pośrednikiem, wykonuje dwie kopie BOOT i podmienia BOOT dopiero po osobnym potwierdzeniu. **Następnie przywróć APP przez `RESTORE.BIN`**: Zortrax Inventure **1.6.1/r0323**, nie kopię dowolnej poprzedniej aplikacji.
 
-*Ekrany w instrukcji są renderami rzeczywistego kodu interfejsu; nie są fotografiami drukarki. / Manual illustrations are renders of the actual UI code, not photographs.*
+Both SD routes require restoring the APP afterwards. ST-Link programs **only sectors 0–1**, leaving APP/NVM intact. Never use Mass Erase, Read Unprotect or option-byte changes to bypass an installation refusal. Factory route requires the exact recognized V9 BOOT, RDP0 and writable BOOT/APP sectors; it does not remove protection.
 
-## Po wgraniu / After installation
+Wymiana BOOT odnawia dziennik P4: pierwszy start **250000, 8N1**. Ustaw ponownie prędkość w `Diagnostics → UART → P4 baud rate`. Zwykłe aktualizacje APP jej nie kasują. Instalator używa własnego stałego 250000.
 
-**Każda instalacja tego BOOT odnawia dziennik P4 i zaczyna od 250000, 8N1.** Ustaw ponownie swoją prędkość w **Diagnostics → UART → P4 baud rate**. Zwykłe późniejsze aktualizacje aplikacji zachowują ten zapis. Instalator r9898 ma własne stałe 250000, 8N1.
+## v1.4 pozostaje dostępna / v1.4 retained
 
-Every installation of this BOOT image resets its P4 journal to **250000, 8N1**. Select your preferred rate again after installation. Later ordinary application updates preserve it. The r9898 installer itself uses 250000, 8N1.
+**[Archiwalne trzy pliki v1.4](firmware/v1.4/)** · [sumy v1.4](firmware/v1.4/SHA256SUMS.txt) · [instrukcja PL v1.4](docs/INSTALACJA_PL.md) · [English v1.4](docs/INSTALLATION_EN.md) · [manifest v1.4](docs/RELEASE_MANIFEST.md).
 
-## Warunki instalacji / Installation conditions
+Binaria, sumy i dotychczasowa dokumentacja v1.4 są zachowane. Udostępnienie starego ZIP-a **nie oznacza**, że jego instalator rozpoznaje BOOT v1.5-HW2 i pozwoli na downgrade; nie obchodź odmowy nieznanego obrazu. Zachowane są także wcześniejsze paczki v1.3 w `SD_INSTALLATION`.
 
-Pakiet factory oznacza ścieżkę wejścia przez **rozpoznany fabryczny BOOT V9**. Nie jest narzędziem wyłączania ochrony. Instalator przed zapisem wymaga **RDP0** i prawa zapisu sektorów BOOT 0–1; cały przebieg SD wymaga również zapisywalnych sektorów APP 4–5. Warunki trzeba potwierdzić przed uruchomieniem instalatora; przy odmowie zakończ procedurę. Nie używaj **Mass Erase**, `-rdu` ani zmiany Option Bytes jako sposobu obejścia błędu. Zmiana RDP1 → RDP0 może skasować główną Flash wraz z NVM. Podczas wymiany BOOT zasilanie musi być stabilne; przerwanie może wymagać odzyskania przez SWD.
+## Publiczne narzędzia / Public tools
 
-The factory package uses a recognized factory V9 bootloader; it does not unlock read or write protection. The installer requires **RDP0** and writable BOOT sectors 0–1; the complete SD route also needs writable APP sectors 4–5. Verify these conditions before starting. Do not bypass a rejection with mass erase, `-rdu` or option-byte changes. Follow the conditions and readback procedure in the manual.
+[`tools/ibtool.py`](tools/ibtool.py): IVB pack/inspect/serial. [`tools/vendor_tool.py`](tools/vendor_tool.py): kontrola i pakowanie **już odszyfrowanych** znanych aplikacji. Skrypty pozostają bez zmian i bez sekretów AES/HMAC/tail20. Nie odszyfrowują ZRTX; zaszyfrowany oryginał instaluj przez SD.
 
-## Zakres publikacji / Publication scope
-
-Wydanie v1.4 publikuje **trzy dystrybucje binarne firmware**, **dwa publiczne narzędzia hosta w Pythonie** (bez kluczy kryptograficznych), instrukcje, sumy kontrolne i ilustracje. Bez kodu źródłowego, ELF, map, pełnych zrzutów prywatnej drukarki, NVM, OTP i UID. `RESTORE.BIN` w obu ZIP przywraca konkretną oryginalną aplikację **Zortrax 1.6.1/r0323**; nie jest kopią dowolnej poprzedniej aplikacji. Firmware producenta podlega odrębnym prawom.
-
-The v1.4 publication contains only the three binary distributions, documentation, checksums and illustrations. Manufacturer firmware in RESTORE.BIN retains its separate rights. Historical v1.3 packages remain in [SD_INSTALLATION](SD_INSTALLATION/README.md).
-
-Independent project; not affiliated with or endorsed by Zortrax.
+Nie publikujemy prywatnego archiwum KOMPLET, źródeł bootloadera/instalatora, plików ELF/map, samodzielnych plików czcionek ani zrzutów urządzenia. Publiczne firmware producenta zachowuje odrębne prawa. / Private sources and unique printer data are not part of this release.
