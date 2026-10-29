@@ -1,10 +1,14 @@
 # Installing Inventure boot v1.4
 
+> **ARCHIWUM / ARCHIVE v1.4 — P4-PERSIST-r2.** Ten dokument opisuje starsze wydanie, nie bieżącą v1.5. / This document describes the older release, not v1.5.
+> [Aktualna dokumentacja / Current docs v1.5](../v1.5/README.md) · [Indeks archiwum / Archive index](README.md)
+
+
 **Build:** P4-PERSIST-r2 · **SD service installer:** r9898  
 **Target:** the supported Zortrax Inventure V9 / STM32F207 / 256 KiB Flash  
 **Author:** Marcin Kowalik · mkowalik@agh.edu.pl
 
-[Polska instrukcja](INSTALACJA_PL.md) · [Downloads](../README.md) · [Release manifest](RELEASE_MANIFEST.md) · [Features and console](FEATURES_AND_CONSOLE_EN.md)
+[Polska instrukcja](INSTALACJA_PL.md) · [Downloads](../../README.md) · [Release manifest](RELEASE_MANIFEST.md) · [Features and console](FEATURES_AND_CONSOLE_EN.md)
 
 This manual covers three installation methods: the original factory bootloader, an existing Inventure boot v1.2/v1.3/v1.4, and direct ST-Link/SWD programming. Both SD methods temporarily replace the printer application with the r9898 service installer, back up and replace BOOT, and then require an explicit application restore. ST-Link writes BOOT directly and preserves the existing application when the procedure below is followed.
 
@@ -16,11 +20,11 @@ The illustrations below are generated from the actual UI code. Installer status 
 
 | Current installation / method | Download | Intended use |
 |---|---|---|
-| Recognized Inventure boot v1.2, v1.3 or earlier v1.4 | [Inventure_boot_v1.4_P4_PERSIST_r2_SD_UPGRADE.zip](../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_UPGRADE.zip) | Four files for the SD upgrade route |
-| Recognized original Zortrax BOOT on a compatible V9 with the required Flash access | [Inventure_boot_v1.4_P4_PERSIST_r2_SD_FACTORY_V9.zip](../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_FACTORY_V9.zip) | Four files for the factory SD route |
-| ST-Link / SWD with readable Flash and writable BOOT sectors | [Inventure_boot_v1.4_P4_PERSIST_r2_FULL_32KiB_0x08000000.bin](../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_FULL_32KiB_0x08000000.bin) | Raw 32768-byte BOOT image at **0x08000000** |
+| Recognized Inventure boot v1.2, v1.3 or earlier v1.4 | [Inventure_boot_v1.4_P4_PERSIST_r2_SD_UPGRADE.zip](../../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_UPGRADE.zip) | Four files for the SD upgrade route |
+| Recognized original Zortrax BOOT on a compatible V9 with the required Flash access | [Inventure_boot_v1.4_P4_PERSIST_r2_SD_FACTORY_V9.zip](../../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_FACTORY_V9.zip) | Four files for the factory SD route |
+| ST-Link / SWD with readable Flash and writable BOOT sectors | [Inventure_boot_v1.4_P4_PERSIST_r2_FULL_32KiB_0x08000000.bin](../../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_FULL_32KiB_0x08000000.bin) | Raw 32768-byte BOOT image at **0x08000000** |
 
-Verify the downloaded file against [SHA256SUMS.txt](../firmware/v1.4/SHA256SUMS.txt) before use. The [manifest](RELEASE_MANIFEST.md) also lists file sizes and hashes. Each ZIP contains exactly four binary files; the ZIP itself is not the file that the printer installs.
+Verify the downloaded file against [SHA256SUMS.txt](../../firmware/v1.4/SHA256SUMS.txt) before use. The [manifest](RELEASE_MANIFEST.md) also lists file sizes and hashes. Each ZIP contains exactly four binary files; the ZIP itself is not the file that the printer installs.
 
 **Do not rename the raw 32 KiB BOOT image to `INVENTUR.IVB` or `InventureUpdate.bin`.** These are different formats and installation stages.
 
@@ -105,7 +109,7 @@ This route supports recognized existing v1.2, v1.3 and v1.4 images. The first st
 7. Release all buttons, then hold **OK + DOWN for 2 seconds**. The service application starts immediately after this confirmation. Its introduction identifies **r9898**, followed by `SD BOOT INSTALLER - V9`.
 8. Continue with **section 6**, then complete the application restore in **section 7**.
 
-![Main SD upgrade route: Check SD package and Install firmware](images/v1.4/upgrade-00-auto.png)
+![Main SD upgrade route: Check SD package and Install firmware](images/upgrade-00-auto.png)
 
 *These examples use the v1.4 renderer. Earlier installed versions can use a different font and menu layout; the main route above also works without a file browser.*
 
@@ -113,9 +117,9 @@ This route supports recognized existing v1.2, v1.3 and v1.4 images. The first st
 
 If the installed bootloader offers **Choose firmware file**, you may replace steps 3–4 above with **Firmware on SD → Choose firmware file → INVENTUR.IVB**, followed by **Check selected file** and then **Install selected file**. Confirm the installation with a fresh release and **OK + UP for 2 seconds**. Then return to the main menu and launch r9898 as in steps 6–7.
 
-![Optional browser route: select INVENTUR.IVB and check the selected file](images/v1.4/upgrade-01-select.png)
+![Optional browser route: select INVENTUR.IVB and check the selected file](images/upgrade-01-select.png)
 
-![Optional browser route: confirm the service application write](images/v1.4/upgrade-02-install.png)
+![Optional browser route: confirm the service application write](images/upgrade-02-install.png)
 
 The original v1.2 has no file browser, so this optional route is not required for v1.2. An explicit file selection remains active until reset or a console `SELECT AUTO`; use the page titled `INVENTUR.IVB` when following this option. Later, select `RESTORE.BIN` explicitly for the restore.
 
@@ -141,11 +145,11 @@ The installer uses **P4 at 250000 baud, 8N1**, even when the previous bootloader
 7. Success shows **`NEW BOOT INSTALLED` / `REBOOTING TO BOOT MENU`**. After about one second the controller resets into the new bootloader.
 8. **Press any button during the new 5-second countdown, then release it.** The application is still r9898 at this point. Continue immediately with the restore in section 7.
 
-![Installer: back up the current BOOT twice and verify both copies](images/v1.4/sd-01-backup.png)
+![Installer: back up the current BOOT twice and verify both copies](images/sd-01-backup.png)
 
-![Installer: separate selection, fresh OK confirmation and five-second OK plus UP hold](images/v1.4/sd-02-confirm.png)
+![Installer: separate selection, fresh OK confirmation and five-second OK plus UP hold](images/sd-02-confirm.png)
 
-![Installer completion and the new bootloader countdown to interrupt](images/v1.4/sd-03-restart.png)
+![Installer completion and the new bootloader countdown to interrupt](images/sd-03-restart.png)
 
 If you miss the countdown, r9898 starts again. Choose **Restart** in the installer and interrupt the next bootloader countdown. **Do not repeat Install / reinstall boot merely because the service menu reappeared.** Starting the installer does not automatically replace BOOT again.
 
@@ -163,11 +167,11 @@ This part takes place in the **new v1.4 bootloader**, after interrupting its cou
 
 **Factory-card example** — the browser includes `InventureUpdate.bin`:
 
-![Restore selection and confirmation using the factory SD card](images/v1.4/factory-04-restore.png)
+![Restore selection and confirmation using the factory SD card](images/factory-04-restore.png)
 
 **Upgrade-card example** — the browser includes `INVENTUR.IVB`:
 
-![Restore selection and confirmation using the upgrade SD card](images/v1.4/sd-04-restore.png)
+![Restore selection and confirmation using the upgrade SD card](images/sd-04-restore.png)
 
 6. Return to the main menu by selecting **Back to files → Back → Back**: selected-file page → file list → Firmware on SD → main menu. Use a new OK press for each selection.
 7. Open **Diagnostics → Verify Flash**. Require **`OPERATION COMPLETE` / `OK`**, then release and wait for the automatic return. Select **Back** to return to the main menu. This checks the installed application in Flash. `VERIFY` is the corresponding UART command, not the name of a main-menu item.
@@ -176,7 +180,7 @@ This part takes place in the **new v1.4 bootloader**, after interrupting its cou
 
 For an immediate manual start instead of waiting for autoboot, interrupt the countdown and select **Start application → Launch application**. Release all buttons at **`START APP REQUEST` / `RELEASE BUTTONS`**, then hold **OK + DOWN for 2 seconds** when prompted. The handoff status is **`START APPLICATION` / `SWITCHING TO ZORTRAX`**. That status is generic; the successful RESTORE and Verify Flash steps establish which application is present.
 
-![Manual application launch: release buttons, then hold OK plus DOWN](images/v1.4/sd-05-start.png)
+![Manual application launch: release buttons, then hold OK plus DOWN](images/sd-05-start.png)
 
 The SD installation is complete after the restored **Zortrax 1.6.1/r0323** application starts successfully and the BOOT backups have been archived. Continue with section 9 to select and save the desired P4 console rate.
 
@@ -315,7 +319,7 @@ Every installation of the canonical BOOT image resets its settings journal and s
 4. If a terminal is connected, change its baud rate to match. Later resets and power cycles restore the saved value, with or without an SD card.
 5. **UART test** is the other functional item in the same UART submenu. It uses the active console rate.
 
-![Diagnostics UART submenu, UART test and persistent P4 baud selection](images/v1.4/sd-06-uart.png)
+![Diagnostics UART submenu, UART test and persistent P4 baud selection](images/sd-06-uart.png)
 
 The setting uses a **256-byte append-only journal at 0x08007F00–0x08007FFF**, inside BOOT. Each changed saved selection consumes one byte; choosing the already saved value consumes none. At most **256 changes** fit in a fresh journal, and an interrupted invalid record also consumes its slot. When full, the UI reports **`P4 not saved` / `Settings full`** (`ERROR LIST_FULL` on UART), preserving the current and saved settings. The running bootloader does not erase sectors to recycle the journal. A normal application update preserves it; reinstalling BOOT resets it.
 

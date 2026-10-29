@@ -1,9 +1,18 @@
-# v1.5 — RELEASE 1.5-HW2
+# Inventure boot v1.5 — aktualna dokumentacja / current documentation
 
-[Project / downloads](../../README.md) · [Installation PL](INSTALACJA_PL.md) · [Installation EN](INSTALLATION_EN.md) · [Features and console](FUNKCJE_I_KONSOLA.md) · [APP examples](P4_EXAMPLES.md) · [Manifest](RELEASE_MANIFEST.md)
+**Kompilacja / Build:** RELEASE 1.5-HW2. [Projekt](../../README.md) · [Wszystkie wersje / All versions](../README.md)
 
-Owner-confirmed on one printer on 29 October 2026. Original stock font, Hardware in both permanent BOOT and installer, non-wrapping menu, partial OLED transfers. Firmware bytes unchanged after the reported test. Preserved v1.4 documentation remains one directory above, and its binaries remain in firmware/v1.4.
+| Dokument / Document | Polski | English |
+|---|---|---|
+| Instalacja: UPGRADE, FROM FACTORY, ST-Link | [Instrukcja](INSTALACJA_PL.md) | [Installation](INSTALLATION_EN.md) |
+| Menu, funkcje, konsola, kopie, recovery | [Funkcje i konsola](FUNKCJE_I_KONSOLA_PL.md) | [Features and console](FEATURES_AND_CONSOLE_EN.md) |
+| Wgrywanie APP: stock, decoded, Klipper | [Przykłady P4](KONSOLA_P4_PRZYKLADY_PL.md) | [P4 examples](P4_UART_EXAMPLES_EN.md) |
+| Tożsamość obrazów i zakres testów | [Manifest](RELEASE_MANIFEST.md) | [Manifest](RELEASE_MANIFEST.md) |
 
-**Hardware — potwierdzone na urządzeniu:** 29.10.2026 właściciel dodatkowo potwierdził, że ekran Hardware w stałym bootloaderze **poprawnie odczytuje rzeczywiste dane jego drukarki**. Nie jest to jedynie wynik testu modelowego. Ilustracje w instrukcji nadal zawierają jawnie syntetyczne dane przykładowe; nie są zrzutem prywatnych danych użytkownika.
+[Binaria v1.5](../../firmware/v1.5) · [SHA-256](../../firmware/v1.5/SHA256SUMS.txt) · [Ilustracje tej wersji](images)
 
-**Hardware — physically confirmed:** on 29 October 2026 the owner explicitly confirmed that the permanent bootloader Hardware screen **correctly reads the actual printer data** on his device. This is an on-device confirmation, not just a model test. Manual previews still use clearly synthetic examples rather than private printer data.
+**Potwierdzenie 29.10.2026:** właściciel wgrał HW2 na jedną drukarkę i potwierdził poprawny odczyt jej danych w Hardware stałego BOOT. To nie jest jedynie test modelowy. Oryginalna nieskalowana czcionka, Hardware w obu programach, brak zawijania, częściowe odświeżanie OLED. Binaria pozostają identyczne z przetestowanymi.
+
+[Zmiany wydania](RELEASE_NOTES.md) · [Audyt i porządek dokumentacji](AUDYT_REPOZYTORIUM_PL.md) · [Wyniki audytu](AUDIT_CHECKS.json) · [Historyczne sprawdzenie publikacji](PUBLICATION_CHECKS.json) · [Archiwum 1.4](../v1.4/README.md)
+
+Tag `v1.5` zachowuje historyczną zawartość z dnia wydania; bieżące poprawki instrukcji są na gałęzi `main`. Nie jest to nowe firmware ani konieczność ponownego wgrania.

@@ -1,6 +1,9 @@
-# Inventure boot v1.4 — OLED menu, features and UART console
+# Inventure boot v1.5 — OLED menu, features and UART console
 
-**Release:** `P4-PERSIST-r2` · **Author:** Marcin Kowalik · mkowalik@agh.edu.pl  
+**v1.5-HW2 status, 29 October 2026:** the owner confirmed installation on one printer and correct reading of actual printer data in permanent BOOT Hardware. Other routes and failure cases are not automatically certified. Hardware is an exception to the three-second result screen: it waits for a fresh OK.
+
+
+**Release:** `RELEASE 1.5-HW2` · **Author:** Marcin Kowalik · mkowalik@agh.edu.pl  
 **Target:** a recognized Inventure V9 with STM32F207 and 256 KiB Flash. File identities are listed in the [release manifest](RELEASE_MANIFEST.md). Flashing procedures are in the [installation guide](INSTALLATION_EN.md). [Polski](FUNKCJE_I_KONSOLA_PL.md).
 
 The owner has confirmed uploading this corrected build to the printer and successfully testing its options. This records operation on that device; it does not stand in for separate electrical measurements or testing every failure scenario.
@@ -23,16 +26,26 @@ An ordinary result screen, such as `OPERATION COMPLETE` / `OK` or `OPERATION REJ
 
 Confirmation first displays `RELEASE BUTTONS`, followed by the required combination. A valid automatic launch after the countdown does not require the manual-launch combination. The separate r9898 BOOT installer has its own menu and two BOOT-replacement confirmations, including a 5-second hold; see the installation guide.
 
-## Complete r2 menu
+## Font and scrolling in v1.5-HW2
 
-The following labels and order are exact for `P4-PERSIST-r2`. Screens use English labels, the heading `Inventure boot v1.4 © Marcin Kowalik`, and the proportional bitmap font recovered from the original Zortrax r0323 application. Its pixels and spacing are retained, with this bootloader's own heading and four visible menu rows. This does not claim identical appearance to every historical factory bootloader screen.
+BOOT and installer use the original proportional r0323 font **without scaling**. The earlier experimental `LARGE_FONT` package is not this release. Heading: `Inventure boot v1.5 © Marcin Kowalik`.
+
+The root menu has four visible rows; submenus pin `Back` above three scrollable rows. UP at the beginning and DOWN at the end neither wrap nor request a needless redraw. The viewport is stateful: the marker moves inside the current window before the list scrolls by one row at its edge. Reversing direction first moves the marker within that window. File-list indices are normalized after a directory-size change. `Backup` is not mistaken for `Back`.
+
+The first OLED frame is full; subsequent frames transmit only the changed rectangle, while an identical frame is not sent again. This describes the implementation, not measured physical-display latency or flicker.
+
+![v1.5 interface](images/overview.png)
+
+## Complete v1.5-HW2 menu
+
+The following labels and order are exact for `RELEASE 1.5-HW2`. Screens use English labels, the heading `Inventure boot v1.5 © Marcin Kowalik`, and the proportional bitmap font recovered from the original Zortrax r0323 application. Its pixels and spacing are retained, with this bootloader's own heading and four visible menu rows. This does not claim identical appearance to every historical factory bootloader screen.
 
 | Main-menu entry, in order | Submenu entries, in order |
 | --- | --- |
 | `Start application` | `Back`, `Launch application` |
 | `Firmware on SD` | `Back`, `Check SD package`, `Install firmware`, `Choose firmware file` |
-| `Diagnostics` | `Back`, `Verify Flash`, `Hardware status`, `Reset / Recovery`, `Clear recovery lock`, `Buttons / raw inputs`, `Display test`, `UART`, `SD card info` |
-| `About` | `Back`, `© Marcin Kowalik`, `mkowalik@agh.edu.pl`, `Version v1.4` |
+| `Diagnostics` | `Back`, `Verify Flash`, `Hardware`, `Reset / Recovery`, `Clear recovery lock`, `Buttons / raw inputs`, `Display test`, `UART`, `SD card info` |
+| `About` | `Back`, `© Marcin Kowalik`, `mkowalik@agh.edu.pl`, `Version v1.5` |
 | `Restart` | `Back`, `Restart controller` |
 | `Backup Flash` | Page title `Backup to SD`: `Back`, `Backup Flash + identity` |
 | `Service history` | `Back`, `View history on UART`, `Save history to SD` |
@@ -45,6 +58,28 @@ The following labels and order are exact for `P4-PERSIST-r2`. Screens use Englis
 | Selected file | The filename is the title; `Back to files`, `Check selected file`, `Install selected file` |
 
 `UART` is immediately **after `Display test` and before `SD card info`**. The two UART functions are inside that submenu. Installed-application verification is `Diagnostics → Verify Flash`; launch is `Start application → Launch application`. `VERIFY` and `BOOT` below are console command names.
+
+## Hardware — actual printer data, read-only
+
+**Owner-confirmed on 29 October 2026:** the permanent bootloader Hardware screen correctly reads the data of the owner's printer. This is confirmation on one physical device, not only a model test.
+
+Permanent BOOT: `Diagnostics → Hardware`. SD installer: `Hardware`. Both show:
+
+```text
+Model: Zortrax Inventure
+Hardware version: <value read from OTP>
+Serial number: <Z and eight hexadecimal digits>
+Print time: <hours>h <minutes:02d>m
+```
+
+Model is the supported profile name. Hardware/SN come from **Inventure OTP**; `Print time` is recorded **printing time** from NVM ID0, not total power-on time. M300 memory addresses/parser are not used. Each opening performs a new read. Unreliable fields independently show `Unavailable`; a valid zero is `0h 00m`.
+
+Release the entry OK button; press **OK again** to return. The screen has no three-second timeout and needs no hold. UP/DOWN do not run other actions here. Viewing it writes no NVM/OTP/settings and exposes no keys, raw OTP or UID. UART `INFO`/board compatibility checks are separate from this screen. No text `Hardware` or `MEMORY` command was added to permanent BOOT.
+
+![Hardware — synthetic example](images/08_hardware_example.png)
+![Unavailable record](images/09_hardware_unavailable.png)
+
+*Native C renders, not photographs; the displayed data are synthetic, not the owner's private printer data.*
 
 ## Firmware files and application installation
 
@@ -83,7 +118,7 @@ The setting journal occupies the last **256 bytes of BOOT**, `0x08007F00–0x080
 
 A normal rate change appends a record without erasing a sector. Once the journal is full, a new selection is rejected: OLED shows `P4 not saved` / `Settings full`, and UART reports `ERROR LIST_FULL`. The active and last valid saved settings are retained. There is no automatic wraparound or journal erase.
 
-**Reinstalling the canonical BOOT image through r9898 or ST-Link resets the journal and restores 250000.** This also applies to an r1 → r2 upgrade. An ordinary application update does not erase it. Raw full 32-KiB BOOT backups include the previous P4 settings. Saving a rate does not modify factory NVM, OTP or option bytes.
+**Reinstalling the canonical BOOT image through r9898 or ST-Link resets the journal and restores 250000.** This also applies to a v1.4 → v1.5-HW2 upgrade. An ordinary application update does not erase it. Raw full 32-KiB BOOT backups include the previous P4 settings. Saving a rate does not modify factory NVM, OTP or option bytes.
 
 This setting belongs to the bootloader console. The r9898 installer always initializes its own **250000 8N1** connection; Zortrax and Klipper applications have their own port configuration. The `INV>` prompt stops operating once control is handed to an application.
 
@@ -99,7 +134,7 @@ The bootloader uses **USART6**, with **PG14 = printer TX** and **PG9 = printer R
 
 Use **3.3-V logic**. This table does not specify physical pin order, connector viewing direction or the numbering of a particular adapter. Establish those from the documentation or a verified connection for that board and adapter. Do not connect a 5-V transmitter or RS-232 voltage levels. Do not power the board from the UART adapter's VCC lead; the printer uses its own supply.
 
-Set the terminal to the active rate, **8N1, no flow control**. LF is a suitable line ending; r2 also accepts CR and CRLF. Commands are uppercase. The prompt is `INV>`. Bootloader echo is on by default, so enabling terminal local echo as well produces doubled characters. Use `ECHO OFF` / `ECHO ON` to control bootloader echo.
+Set the terminal to the active rate, **8N1, no flow control**. LF is a suitable line ending; v1.5-HW2 also accepts CR and CRLF. Commands are uppercase. The prompt is `INV>`. Bootloader echo is on by default, so enabling terminal local echo as well produces doubled characters. Use `ECHO OFF` / `ECHO ON` to control bootloader echo.
 
 Example for macOS with pySerial installed — replace the port name and use the rate selected on the panel:
 
@@ -118,7 +153,7 @@ Ordinary success is reported as `DONE OK`; errors use `ERROR <code>`. Most comma
 | Command | Action / characteristic response |
 | --- | --- |
 | `HELP` | Command list; `DONE OK` |
-| `INFO` | Version, `BUILD P4-PERSIST-r2`, mode, APP limits, hardware status and `P4_BAUD … 8N1 SAVED …` |
+| `INFO` | Version, `BUILD RELEASE 1.5-HW2`, mode, APP limits, hardware status and `P4_BAUD … 8N1 SAVED …` |
 | `VERIFY` | Verify the APP in Flash; success prints `INSTALLED <byte_count> <name_or_CUSTOM_MANIFEST>`, then `DONE OK` |
 | `LIST` | Refresh the file list: `FILES <count> (NOT YET VERIFIED)`, followed by each index, name and size |
 | `SELECT n` | Select a **zero-based** index from the last list; `SELECTED <name>`, `DONE OK` |
@@ -214,3 +249,14 @@ History retains the last **24 events**, boot sequence number and milliseconds si
 | `BUSY` | The P4 rate cannot be changed now, for example while a UART line is incomplete |
 
 When investigating a problem, retain the exact message, the action that produced it and the `INFO` output. These commands do not change MCU protection settings.
+
+## Separate installer program — `SD>` prompt
+
+HW2 installer is a temporary APP, not permanent BOOT or the printing firmware. Its menu is **Backup current boot x2; Install / reinstall boot; Hardware; Restart**. It always uses **250000, 8N1**, with **LF** line endings. Supported commands: `INFO`, `MEMORY` (four device-data lines), `BACKUP`, `INSTALL`, `REBOOT`. Permanent BOOT commands such as `SDUPDATE` do not belong to this console.
+
+`INSTALL` requires a recognized source, valid RESTORE, two verified current-BOOT copies and permitted hardware/write conditions. The gesture is separate from selecting the action: **release all buttons → press OK alone once and release → hold OK+UP for 5 s**, only when requested. DOWN cancels. Do not begin holding during verification. After success restore APP using `RESTORE.BIN` as described in the [installation guide](INSTALLATION_EN.md).
+
+`V1.5 HW2 - HW UNTESTED` and the `r9898 UI-MEM1` family identification are historical literals in the unchanged binary. The current status includes the owner's successful installation and correct Hardware readout on one printer. Identify the release by **RELEASE 1.5-HW2 and complete SHA-256**, not r9898 alone. Published firmware was not rebuilt after that confirmation.
+
+
+[Publiczne narzędzia / Public tools](../../tools/README.md): [ibtool.py](../../tools/ibtool.py), [vendor_tool.py](../../tools/vendor_tool.py).

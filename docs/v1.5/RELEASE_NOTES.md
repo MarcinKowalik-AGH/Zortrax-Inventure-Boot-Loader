@@ -19,3 +19,7 @@ See the README and docs/v1.5 for complete Polish and English installation instru
 **Hardware — potwierdzone na urządzeniu:** 29.10.2026 właściciel dodatkowo potwierdził, że ekran Hardware w stałym bootloaderze **poprawnie odczytuje rzeczywiste dane jego drukarki**. Nie jest to jedynie wynik testu modelowego. Ilustracje w instrukcji nadal zawierają jawnie syntetyczne dane przykładowe; nie są zrzutem prywatnych danych użytkownika.
 
 **Hardware — physically confirmed:** on 29 October 2026 the owner explicitly confirmed that the permanent bootloader Hardware screen **correctly reads the actual printer data** on his device. This is an on-device confirmation, not just a model test. Manual previews still use clearly synthetic examples rather than private printer data.
+
+## Documentation audit — 29 October 2026
+
+Current manuals, screenshots and command examples are under [docs/v1.5](README.md); [v1.4](../v1.4/README.md) and [v1.3](../v1.3/README.md) are explicitly archived. Full PL/EN feature and P4 guides replace the mixed-language short overviews as the canonical references. All firmware bytes and the v1.5 tag remain unchanged. Only the host sender help heading mentions v1.5 explicitly; its executable logic is unchanged. [Audit](AUDYT_REPOZYTORIUM_PL.md).

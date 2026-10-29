@@ -1,7 +1,11 @@
 # Konsola P4 — polecenia, oryginalny firmware, odszyfrowany firmware i Klipper
 
+> **ARCHIWUM / ARCHIVE v1.4 — P4-PERSIST-r2.** Ten dokument opisuje starsze wydanie, nie bieżącą v1.5. / This document describes the older release, not v1.5.
+> [Aktualna dokumentacja / Current docs v1.5](../v1.5/README.md) · [Indeks archiwum / Archive index](README.md)
+
+
 **Dotyczy:** Inventure boot v1.4 `P4-PERSIST-r2` (V9 / STM32F207 / 256 KiB Flash). Instrukcja uzupełniająca wydanie z 25.10.2026.  
-[Projekt](../README.md) · [Pełny opis funkcji](FUNKCJE_I_KONSOLA_PL.md) · [Instalacja bootloadera SD / ST-Link](INSTALACJA_PL.md) · [English](P4_UART_EXAMPLES_EN.md)
+[Projekt](../../README.md) · [Pełny opis funkcji](FUNKCJE_I_KONSOLA_PL.md) · [Instalacja bootloadera SD / ST-Link](INSTALACJA_PL.md) · [English](P4_UART_EXAMPLES_EN.md)
 
 > Konsola `INV>` działa **wyłącznie w naszym bootloaderze**, przed uruchomieniem aplikacji. Nie jest konsolą G-code ani konsolą oryginalnego Zortraxa. `SDUPDATE` i `UARTUPDATE` wymieniają tylko aplikację **APP od 0x08010000**, nie sam BOOT, NVM, OTP czy Option Bytes. Przed programowaniem wykonaj i zweryfikuj kopię pamięci. Nie używaj Mass Erase, zmiany RDP ani Option Bytes do obejścia odmowy.
 
@@ -101,7 +105,7 @@ BOOT
 
 Numer 0 to **przykład**, nie gwarantowana pozycja. `SDUPDATE` aktualizuje aplikację, a nie sektory BOOT.
 
-**Zaszyfrowany ZRTX przez UART:** publiczne [`tools/vendor_tool.py`](../tools/vendor_tool.py) **nie zawiera klucza AES** i nie odszyfrowuje `InventureUpdate.bin`. Sam `ibtool.py serial` przyjmuje tylko poprawnie przygotowany `.IVB`, a nie zaszyfrowany pakiet. Bezpieczna droga dla zaszyfrowanego pliku to powyższa instalacja z **SD** (bootloader sam rozpoznaje i sprawdza wspierany obraz).
+**Zaszyfrowany ZRTX przez UART:** publiczne [`tools/vendor_tool.py`](../../tools/vendor_tool.py) **nie zawiera klucza AES** i nie odszyfrowuje `InventureUpdate.bin`. Sam `ibtool.py serial` przyjmuje tylko poprawnie przygotowany `.IVB`, a nie zaszyfrowany pakiet. Bezpieczna droga dla zaszyfrowanego pliku to powyższa instalacja z **SD** (bootloader sam rozpoznaje i sprawdza wspierany obraz).
 
 Można **bez odszyfrowywania** podejrzeć jedynie metadane zewnętrznego kontenera:
 
@@ -130,7 +134,7 @@ BOOT
 
 `SELECT 1` znów jest wyłącznie przykładem; odczytaj numer z `LIST`. **RESTORE.BIN należy wybrać jawnie**, nie jest wybierany przez `SELECT AUTO`. Potwierdzenia i weryfikacja jak powyżej.
 
-**Przesyłanie przez UART bez sekretów:** oba skrypty są teraz publiczne: [`tools/vendor_tool.py`](../tools/vendor_tool.py) i [`tools/ibtool.py`](../tools/ibtool.py). Pierwszy przyjmuje **już odszyfrowaną** aplikację, sprawdza jej SHA-256 względem ośmiu rozpoznanych obrazów i opakowuje ją w IVB. Jeżeli plik zawiera **kompletny oryginalny payload wraz z istniejącym tail i paddingiem**, narzędzie zachowa go wyłącznie po zgodności pełnego SHA-256 z archiwalnym wzorcem. Nie generuje ani nie sprawdza HMAC za pomocą tajnego klucza.
+**Przesyłanie przez UART bez sekretów:** oba skrypty są teraz publiczne: [`tools/vendor_tool.py`](../../tools/vendor_tool.py) i [`tools/ibtool.py`](../../tools/ibtool.py). Pierwszy przyjmuje **już odszyfrowaną** aplikację, sprawdza jej SHA-256 względem ośmiu rozpoznanych obrazów i opakowuje ją w IVB. Jeżeli plik zawiera **kompletny oryginalny payload wraz z istniejącym tail i paddingiem**, narzędzie zachowa go wyłącznie po zgodności pełnego SHA-256 z archiwalnym wzorcem. Nie generuje ani nie sprawdza HMAC za pomocą tajnego klucza.
 
 ```sh
 python3 -m pip install pyserial
@@ -146,11 +150,11 @@ python3 tools/ibtool.py serial STOCK_RAW_R0323.IVB --port /dev/cu.TWOJ_PORT --ba
 
 ## 6. Przykład C — własna aplikacja, np. Klipper MCU
 
-To **nie jest instrukcja instalacji zwykłego, uniwersalnego Klippera**. Działające bez sekretów [`tools/ibtool.py`](../tools/ibtool.py) jest dostępne w tym repozytorium. Potrzebny jest obraz przygotowany dla **STM32F207, Inventure V9**, z właściwymi zegarami, mapą GPIO, obsługą sprzętu i bezpieczeństwa, linkowany do **`0x08010000`**. Sam plik o nazwie `klipper.bin` nie wystarcza.
+To **nie jest instrukcja instalacji zwykłego, uniwersalnego Klippera**. Działające bez sekretów [`tools/ibtool.py`](../../tools/ibtool.py) jest dostępne w tym repozytorium. Potrzebny jest obraz przygotowany dla **STM32F207, Inventure V9**, z właściwymi zegarami, mapą GPIO, obsługą sprzętu i bezpieczeństwa, linkowany do **`0x08010000`**. Sam plik o nazwie `klipper.bin` nie wystarcza.
 
 Bootloader obsługuje niezaszyfrowany format **`INVB001`** z nagłówkiem 64 B, `target=0x32463956`, `base=0x08010000`, długością i SHA-256. Surowa APP musi mieć **8–196352 B**, MSP w zakresie SRAM 128 KiB wyrównany do 8 i adres Reset Handler Thumb wewnątrz payloadu. Te warunki potwierdzają *strukturę*, nie poprawność termiki i napędów.
 
-Na komputerze, korzystając z publicznego [`tools/ibtool.py`](../tools/ibtool.py):
+Na komputerze, korzystając z publicznego [`tools/ibtool.py`](../../tools/ibtool.py):
 
 ```sh
 python3 tools/ibtool.py pack klipper.bin KLIPPER_V9.IVB

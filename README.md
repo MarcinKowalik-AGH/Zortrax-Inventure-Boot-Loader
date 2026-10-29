@@ -1,63 +1,52 @@
 # Inventure boot v1.5 — RELEASE 1.5-HW2
 
 **Zortrax Inventure V9 · STM32F207 · 256 KiB Flash**  
-Autor / Author: **Marcin Kowalik**, mkowalik@agh.edu.pl  
-Aktualne wydanie / Current release: **v1.5**, kompilacja / build **RELEASE 1.5-HW2**, 29.10.2026.
+Autor / Author: **Marcin Kowalik**, mkowalik@agh.edu.pl. Wydanie / release: **29.10.2026**.
 
-## Pobierz / Download
+## Pobierz bieżącą v1.5 / Download current v1.5
 
-| Stan drukarki / Current state | Właściwy plik / Correct file |
+| Stan drukarki / Current state | Właściwy plik / Correct package |
 |---|---|
-| Rozpoznany własny Inventure boot, także v1.4 / Recognized custom bootloader including v1.4 | **[SD UPGRADE — aktualizacja](firmware/v1.5/Inventure_boot_v1.5_HW2_STOCK_FONT_2026-10-29_SD_UPGRADE.zip)** |
-| Zgodny fabryczny BOOT V9, spełnione warunki zapisu / Compatible original BOOT V9 with write prerequisites met | **[FROM FACTORY — SD_FACTORY_V9](firmware/v1.5/Inventure_boot_v1.5_HW2_STOCK_FONT_2026-10-29_SD_FACTORY_V9.zip)** |
-| Dostęp SWD / ST-Link | **[ST-LINK — 32 KiB, 0x08000000](firmware/v1.5/Inventure_boot_v1.5_HW2_STOCK_FONT_2026-10-29_STLINK_32KiB_0x08000000.bin)** |
+| Rozpoznany własny Inventure boot, również v1.4 | **[UPGRADE](firmware/v1.5/Inventure_boot_v1.5_HW2_STOCK_FONT_2026-10-29_SD_UPGRADE.zip)** |
+| Dokładnie rozpoznany oryginalny BOOT V9, spełnione warunki zapisu | **[FROM FACTORY](firmware/v1.5/Inventure_boot_v1.5_HW2_STOCK_FONT_2026-10-29_SD_FACTORY_V9.zip)** |
+| Dostęp SWD / ST-Link | **[ST-LINK — 32 KiB pod 0x08000000](firmware/v1.5/Inventure_boot_v1.5_HW2_STOCK_FONT_2026-10-29_STLINK_32KiB_0x08000000.bin)** |
 
-[SHA-256 v1.5](firmware/v1.5/SHA256SUMS.txt) · [Manifest i status testów](docs/v1.5/RELEASE_MANIFEST.md)
+[Publiczne wydanie v1.5](https://github.com/MarcinKowalik-AGH/Zortrax-Inventure-Boot-Loader/releases/tag/v1.5) · [SHA-256](firmware/v1.5/SHA256SUMS.txt) · [Manifest](docs/v1.5/RELEASE_MANIFEST.md)
 
-**[Pełna instrukcja po polsku — trzy metody i ekrany](docs/v1.5/INSTALACJA_PL.md)**  
-**[Complete English installation manual — all three routes](docs/v1.5/INSTALLATION_EN.md)**  
-[Funkcje i konsola P4 / Features and P4](docs/v1.5/FUNKCJE_I_KONSOLA.md) · [Przykłady aktualizacji APP / APP examples](docs/v1.5/P4_EXAMPLES.md)
+## Dokumentacja — zawsze według wersji / Versioned documentation
 
-## Potwierdzenie na drukarce / Hardware feedback
+**[Pełna dokumentacja v1.5](docs/v1.5/README.md)** · **[Instrukcja instalacji PL](docs/v1.5/INSTALACJA_PL.md)** · **[English installation](docs/v1.5/INSTALLATION_EN.md)**
 
-**29.10.2026:** właściciel zgłosił po wgraniu tej paczki: „wgrałem na 1 drukarkę jest wszystko ok”. Publikacja zachowuje **dokładnie te same binaria**. Jest to potwierdzenie działania na **jednej drukarce**, nie osobny test wszystkich trzech metod, wszystkich prędkości ani awarii zasilania.
+[Funkcje i Hardware PL](docs/v1.5/FUNKCJE_I_KONSOLA_PL.md) · [Features and console EN](docs/v1.5/FEATURES_AND_CONSOLE_EN.md) · [Przykłady P4 PL](docs/v1.5/KONSOLA_P4_PRZYKLADY_PL.md) · [P4 examples EN](docs/v1.5/P4_UART_EXAMPLES_EN.md) · [Publiczne narzędzia PC](tools/README.md)
 
-The owner reported successful installation and operation on **one printer**. The tested binaries are published unchanged; this report does not certify every installation route or failure mode.
+| Wersja | Dokumentacja | Pliki |
+|---|---|---|
+| **1.5 — aktualna / current** | [docs/v1.5](docs/v1.5/README.md) | [firmware/v1.5](firmware/v1.5) |
+| 1.4 — archiwum / archive | [docs/v1.4](docs/v1.4/README.md) | [firmware/v1.4](firmware/v1.4) |
+| 1.3 — starsze archiwum / legacy | [docs/v1.3](docs/v1.3/README.md) | [SD_INSTALLATION](SD_INSTALLATION) |
 
-Instalator nadal wypisuje historyczny banner `V1.5 HW2 - HW UNTESTED`, zapisany przed tą próbą. Nie przekompilowano go tylko w celu zmiany napisu. Aktualny status opisuje manifest; identyfikuj pakiet pełną sumą SHA-256, nie samym `r9898`.
+[Indeks wszystkich wersji](docs/README.md) · [Audyt repozytorium](docs/v1.5/AUDYT_REPOZYTORIUM_PL.md)
 
-**Hardware — potwierdzone na urządzeniu:** 29.10.2026 właściciel dodatkowo potwierdził, że ekran Hardware w stałym bootloaderze **poprawnie odczytuje rzeczywiste dane jego drukarki**. Nie jest to jedynie wynik testu modelowego. Ilustracje w instrukcji nadal zawierają jawnie syntetyczne dane przykładowe; nie są zrzutem prywatnych danych użytkownika.
+## Potwierdzenie na urządzeniu / Hardware feedback
 
-**Hardware — physically confirmed:** on 29 October 2026 the owner explicitly confirmed that the permanent bootloader Hardware screen **correctly reads the actual printer data** on his device. This is an on-device confirmation, not just a model test. Manual previews still use clearly synthetic examples rather than private printer data.
+**29.10.2026 właściciel potwierdził instalację na jednej drukarce i poprawny odczyt rzeczywistych danych w Hardware stałego bootloadera.** Nie jest to wyłącznie wynik modelu. Binaria są identyczne z przetestowanymi; nie zmieniono ich podczas porządkowania dokumentacji. To potwierdzenie jednego urządzenia, nie odrębny odbiór każdej trasy, prędkości ani awarii zasilania.
 
-## Co zmienia v1.5-HW2 / Changes
+**The owner confirmed installation on one printer and correct reading of its actual data in permanent BOOT Hardware.** This is an on-device report. Published firmware is unchanged, not rebuilt for the documentation audit. Synthetic native-rendered manual previews are not photographs or private device dumps.
 
-- **Oryginalna czcionka Inventure r0323, bez skalowania**, wspólna dla BOOT i instalatora. / Original unscaled stock font in both programs.
-- **Hardware** w `Diagnostics` bootloadera i menu instalatora: model, wersja sprzętowa i numer z OTP, **Print time** z NVM; `Unavailable` przy braku wiarygodnych danych. / Real read-only device information.
-- **Menu bez zawijania**, zapamiętane okno listy, przypięty `Back`, brak mylenia `Backup` z `Back`. / Non-wrapping, stateful list navigation.
-- Przesyłanie zmienionego prostokąta OLED zamiast powtarzania pełnej klatki. / Partial display transfers after the first full frame.
-- Bezstratna kompresja tekstów: wszystkie funkcje pozostają; **80 B zapasu** przed dziennikiem P4. / Lossless text storage optimization without removing features.
+Instalator zachowuje wcześniejszy napis `V1.5 HW2 - HW UNTESTED` oraz identyfikację rodziny r9898/UI-MEM1. To historyczne teksty przetestowanego binarium, nie aktualna ocena poprawności Hardware. Wersję pakietu identyfikuje pełne SHA-256 i `RELEASE 1.5-HW2`.
 
-![Ekrany bootloadera i instalatora v1.5](docs/images/v1.5/overview.png)
+## Funkcje v1.5-HW2 / Features
 
-*Rendery rzeczywistego kodu C, nie fotografie. Dane Hardware na planszach są syntetyczne. / Native C renders, not photographs; shown device data are synthetic.*
+Oryginalna nieskalowana czcionka r0323 w BOOT i instalatorze; Hardware z modelem, wersją sprzętu i numerem z OTP oraz **Print time** z NVM; menu bez zawijania, przypięty Back i pamiętane okno listy; częściowe odświeżanie OLED; bezstratna kompresja tekstów z 80 B zapasu przed dziennikiem P4. Zachowane formaty aktualizacji, kopie, historia, recovery i trwała prędkość P4.
 
-## Ważne przed instalacją / Important
+![Ekrany v1.5-HW2](docs/v1.5/images/overview.png)
 
-Oba ZIP-y SD mają po **cztery pliki**, do rozpakowania do głównego katalogu FAT32. Procedura SD tymczasowo zastępuje aplikację pośrednikiem, wykonuje dwie kopie BOOT i podmienia BOOT dopiero po osobnym potwierdzeniu. **Następnie przywróć APP przez `RESTORE.BIN`**: Zortrax Inventure **1.6.1/r0323**, nie kopię dowolnej poprzedniej aplikacji.
+*Rendery kodu C; dane Hardware są syntetyczne. / Native C renders with synthetic device data.*
 
-Both SD routes require restoring the APP afterwards. ST-Link programs **only sectors 0–1**, leaving APP/NVM intact. Never use Mass Erase, Read Unprotect or option-byte changes to bypass an installation refusal. Factory route requires the exact recognized V9 BOOT, RDP0 and writable BOOT/APP sectors; it does not remove protection.
+## Przed wgraniem / Before installation
 
-Wymiana BOOT odnawia dziennik P4: pierwszy start **250000, 8N1**. Ustaw ponownie prędkość w `Diagnostics → UART → P4 baud rate`. Zwykłe aktualizacje APP jej nie kasują. Instalator używa własnego stałego 250000.
+Oba ZIP-y SD zawierają **cztery pliki** do głównego katalogu FAT32. Pośrednik zastępuje tymczasowo APP, wykonuje dwie kopie BOOT i wymaga osobnego potwierdzenia podmiany. **Po instalacji przywróć APP przez RESTORE.BIN (Zortrax 1.6.1/r0323).** Nie jest to kopia dowolnego poprzedniego firmware.
 
-## v1.4 pozostaje dostępna / v1.4 retained
+ST-Link zapisuje **tylko sektory 0–1**, z kontrolą zachowania NVM i APP. Nie używaj Mass Erase, Read Unprotect ani zmian Option Bytes do obejścia odmowy. Droga factory wymaga rozpoznanego oryginału, RDP0 i zapisywalnych sektorów BOOT/APP; nie wyłącza ochrony. Wymiana BOOT resetuje zapis P4 do **250000, 8N1**, zwykła aktualizacja APP go zachowuje.
 
-**[Archiwalne trzy pliki v1.4](firmware/v1.4/)** · [sumy v1.4](firmware/v1.4/SHA256SUMS.txt) · [instrukcja PL v1.4](docs/INSTALACJA_PL.md) · [English v1.4](docs/INSTALLATION_EN.md) · [manifest v1.4](docs/RELEASE_MANIFEST.md).
-
-Binaria, sumy i dotychczasowa dokumentacja v1.4 są zachowane. Udostępnienie starego ZIP-a **nie oznacza**, że jego instalator rozpoznaje BOOT v1.5-HW2 i pozwoli na downgrade; nie obchodź odmowy nieznanego obrazu. Zachowane są także wcześniejsze paczki v1.3 w `SD_INSTALLATION`.
-
-## Publiczne narzędzia / Public tools
-
-[`tools/ibtool.py`](tools/ibtool.py): IVB pack/inspect/serial. [`tools/vendor_tool.py`](tools/vendor_tool.py): kontrola i pakowanie **już odszyfrowanych** znanych aplikacji. Skrypty pozostają bez zmian i bez sekretów AES/HMAC/tail20. Nie odszyfrowują ZRTX; zaszyfrowany oryginał instaluj przez SD.
-
-Nie publikujemy prywatnego archiwum KOMPLET, źródeł bootloadera/instalatora, plików ELF/map, samodzielnych plików czcionek ani zrzutów urządzenia. Publiczne firmware producenta zachowuje odrębne prawa. / Private sources and unique printer data are not part of this release.
+Publiczne narzędzia hosta nie zawierają kluczy odszyfrowywania ani funkcji odtwarzania tail20. Nie publikujemy prywatnego KOMPLETU, źródeł BOOT/instalatora, ELF/map ani indywidualnych zrzutów drukarki. Zachowanie v1.4 nie oznacza gwarantowanego downgrade z HW2. Tag v1.5 pozostaje oryginalnym snapshotem wydania; aktualne instrukcje są na `main`.

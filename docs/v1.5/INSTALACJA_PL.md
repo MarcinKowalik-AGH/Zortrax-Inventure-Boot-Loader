@@ -3,11 +3,15 @@
 **Wydanie:** v1.5 · **BUILD:** RELEASE 1.5-HW2 · **Data publikacji:** 29.10.2026  
 **Cel:** Inventure V9 / STM32F207 / 256 KiB Flash. Autor: Marcin Kowalik.
 
-[Projekt](../../README.md) · [English](INSTALLATION_EN.md) · [Funkcje/P4](FUNKCJE_I_KONSOLA.md) · [Manifest](RELEASE_MANIFEST.md) · [Archiwum v1.4](../INSTALACJA_PL.md)
+[Projekt](../../README.md) · [English](INSTALLATION_EN.md) · [Funkcje/P4](FUNKCJE_I_KONSOLA_PL.md) · [Manifest](RELEASE_MANIFEST.md) · [Archiwum v1.4](../v1.4/INSTALACJA_PL.md)
 
 Właściciel potwierdził poprawną instalację i działanie na **jednej drukarce**. Nie zmieniono binariów po tej próbie. Nie wyszczególnił osobno wyników wszystkich trzech metod. Banner instalatora `HW UNTESTED` pochodzi z kompilacji sprzed próby; pozostał, aby zachować identyczne pliki.
 
 **Hardware — potwierdzone na urządzeniu:** 29.10.2026 właściciel dodatkowo potwierdził, że ekran Hardware w stałym bootloaderze **poprawnie odczytuje rzeczywiste dane jego drukarki**. Nie jest to jedynie wynik testu modelowego. Ilustracje w instrukcji nadal zawierają jawnie syntetyczne dane przykładowe; nie są zrzutem prywatnych danych użytkownika.
+
+## Nawigacja
+
+[FROM FACTORY](#factory) · [UPGRADE](#upgrade) · [Wspólny etap SD i RESTORE](#instalator) · [ST-Link](#stlink) · [Konsola P4](FUNKCJE_I_KONSOLA_PL.md) · [Przykłady APP](KONSOLA_P4_PRZYKLADY_PL.md)
 
 ## 1. Wybór zestawu
 
@@ -49,7 +53,9 @@ Rozpakuj **jeden** ZIP na komputerze. Na kartę **FAT32**, do katalogu główneg
 
 Nie kopiuj ZIP-a bez rozpakowania, prywatnego KOMPLETU ani surowego pliku ST-Link. Nie mieszaj dwóch instalatorów na jednej karcie. `ZBACKUP.BIN` i `ZBACK2.BIN` ze świeżego ZIP-a są wypełnione A5; **nie zastępuj nimi już wykonanych kopii**. Zachowaj poprzednie pliki na komputerze, użyj oddzielnej przygotowanej karty. Bezpiecznie wysuń kartę z systemu.
 
-## A. FROM FACTORY — oryginalny bootloader Zortrax
+<a id="factory"></a>
+
+## 4. A — FROM FACTORY — oryginalny bootloader Zortrax
 
 1. Wykonaj wymagania rozdziałów 1–3 **przed włożeniem karty**, w szczególności odczyt i zabezpieczenie własnych danych oraz sprawdzenie ochrony pamięci.
 2. Wyłącz drukarkę. Włóż kartę z **SD_FACTORY_V9**, zawierającą `InventureUpdate.bin`.
@@ -57,13 +63,15 @@ Nie kopiuj ZIP-a bez rozpakowania, prywatnego KOMPLETU ani surowego pliku ST-Lin
 4. Oczekuj menu **`SD BOOT INSTALLER - V9`**, a nie menu aplikacji drukującej. Nagłówek `Inventure boot v1.5` w pośredniku **nie dowodzi jeszcze podmiany BOOT**.
 5. Kontynuuj dokładnie rozdział C: dwie kopie, osobne potwierdzenie, zapis BOOT, restart i przywrócenie APP.
 
-![Menu rzeczywistego instalatora HW2](../images/v1.5/10_installer_menu.png)
+![Menu rzeczywistego instalatora HW2](images/10_installer_menu.png)
 
 To render kodu instalatora, nie fotografia ani dowód osobnego testu drogi factory.
 
 Jeżeli pozostał oryginalny ekran lub wystąpiła odmowa, nie zgaduj, że instalacja zakończyła się sukcesem. Sprawdź zestaw, format FAT32, zgodność źródła i komunikat. Nie wymuszaj zapisu zmianą ochrony.
 
-## B. UPGRADE — istniejący własny bootloader
+<a id="upgrade"></a>
+
+## 5. B — UPGRADE — istniejący własny bootloader
 
 1. Przygotuj kartę z **SD_UPGRADE** zgodnie z rozdziałem 3.
 2. Włącz lub zrestartuj drukarkę i zatrzymaj **5-sekundowy autostart** przyciskiem. Własny BOOT nie instaluje pliku tylko dlatego, że jest on obecny na SD.
@@ -72,18 +80,20 @@ Jeżeli pozostał oryginalny ekran lub wystąpiła odmowa, nie zgaduj, że insta
 5. Po zakończeniu wybierz `Start application → Launch application`. Puść przyciski, następnie na prośbę trzymaj **OK+DOWN przez 2 s**. Sam UP anuluje start.
 6. Po pojawieniu się `SD BOOT INSTALLER - V9` przejdź do C.
 
-![Wybór plików w nowym interfejsie](../images/v1.5/05_files.png)
-![Wybrany plik — oddzielna kontrola i instalacja](../images/v1.5/06_file.png)
+![Wybór plików w nowym interfejsie](images/05_files.png)
+![Wybrany plik — oddzielna kontrola i instalacja](images/06_file.png)
 
 Ilustracje pokazują renderer HW2; wygląd starszego BOOT może być inny. W v1.2 bez przeglądarki użyj `Check SD package` i `Install firmware` przy **jednym** poprawnym standardowym pliku `INVENTUR.IVB`; opcja startu może nazywać się `Start firmware`. Przy pomocy konsoli: `SDCHECK`, następnie `SDUPDATE`, potem `BOOT` z tymi samymi fizycznymi potwierdzeniami. Indeks `SELECT n` zawsze pochodzi z bieżącego `LIST`, a nie z przykładu.
 
-## C. Wspólny etap obu kart — rzeczywista podmiana BOOT
+<a id="instalator"></a>
+
+## 6. C — Wspólny etap obu kart — rzeczywista podmiana BOOT
 
 ### C1. Dwie kopie starego BOOT
 
 W menu pośrednika wybierz **`Backup current boot x2`** i poczekaj na zakończenie zapisu oraz weryfikacji. Program sprawdza także plik przywracania APP. Sukces oznaczają komunikaty **`TWO SD COPIES VERIFIED` / `SELECT INSTALL SEPARATELY`**, a gdy kopie już pasują — **`TWO BOOT BACKUPS VERIFIED`**.
 
-![Kopia i weryfikacja](../images/v1.5/12_installer_backup.png)
+![Kopia i weryfikacja](images/12_installer_backup.png)
 
 Inna wcześniejsza kopia nie zostaje bezwarunkowo nadpisana. `Hardware` nie jest kopią pamięci, a napis `MCU... YES` nie zastępuje poprawnej weryfikacji obu plików.
 
@@ -96,7 +106,7 @@ Wybierz **`Install / reinstall boot`**. Program sprawdza źródło, obie kopie, 
 3. Po wyświetleniu drugiego potwierdzenia trzymaj **OK+UP przez pełne 5 s**. DOWN anuluje. Nie trzymaj kombinacji od początku weryfikacji i nie traktuj pierwszego kliku wyboru jako potwierdzenia.
 4. Po zaakceptowaniu program ponownie sprawdza warunki i rozpoczyna zapis. **Nie odłączaj zasilania ani karty**. Przyciski można puścić po zaakceptowaniu gestu.
 
-![Potwierdzenie zapisu BOOT](../images/v1.5/13_installer_gesture.png)
+![Potwierdzenie zapisu BOOT](images/13_installer_gesture.png)
 
 Na czas programowania, gdy brak wiarygodnego zakresu procentowego, może być `--`. Postęp dotyczy nazwanej bieżącej fazy, nie całej instalacji. Błąd nie oznacza zakończenia na 100%.
 
@@ -104,7 +114,7 @@ Na czas programowania, gdy brak wiarygodnego zakresu procentowego, może być `-
 
 Po sukcesie pojawia się `NEW BOOT INSTALLED` / `REBOOTING TO BOOT MENU` i następuje restart. **Przerwij odliczanie**, bo w APP nadal znajduje się pośrednik. Pozostaw kartę.
 
-![Sukces pośrednika](../images/v1.5/14_installer_success.png)
+![Sukces pośrednika](images/14_installer_success.png)
 
 W nowym BOOT wybierz `Firmware on SD → Choose firmware file → RESTORE.BIN → Check selected file`. Po sukcesie wybierz `Install selected file` i potwierdź **OK+UP 2 s**. Następnie `Diagnostics → Verify Flash`. Dopiero po powodzeniu uruchom `Start application → Launch application` (**OK+DOWN 2 s**).
 
@@ -112,7 +122,9 @@ W nowym BOOT wybierz `Firmware on SD → Choose firmware file → RESTORE.BIN �
 
 Dołączony RESTORE przywraca **Zortrax 1.6.1/r0323**. Nie jest kopią dowolnej aplikacji wcześniej zainstalowanej w drukarce. Własną APP, np. odpowiednio przygotowanego Klippera, przywraca się jako osobno sprawdzony pakiet; nie zmienia to konieczności zakończenia etapu pośrednika. Zabezpiecz wykonane kopie BOOT na komputerze.
 
-## D. ST-Link / SWD — tylko BOOT, bez podmiany APP
+<a id="stlink"></a>
+
+## 7. D — ST-Link / SWD — tylko BOOT, bez podmiany APP
 
 1. Wyłącz zasilanie na czas łączenia przewodów. Użyj zidentyfikowanego złącza SWD konkretnej płyty: **SWDIO ↔ SWDIO, SWCLK ↔ SWCLK, GND ↔ GND, odniesienie napięcia docelowego według instrukcji swojego programatora**; NRST tylko zgodnie z jego dokumentacją. Nie zgaduj numerów styków. Nie łącz wyjścia zasilania adaptera z zasilaną drukarką.
 2. W STM32CubeProgrammer wybierz **ST-LINK / SWD**, połącz się z prawidłowo zasiloną płytą i zatrzymaj MCU. Sprawdź identyfikację MCU oraz rozmiar Flash **256 KiB**. Odczytaj stan ochron; niczego nie zmieniaj. Przy odmowie odczytu/zapisu przerwij, bez Read Unprotect/Mass Erase.
@@ -139,16 +151,16 @@ print('PASS: BOOT zgodny, NVM i APP zachowane')
 
 Porównanie należy zrobić przed zmianą baud lub uruchomieniem APP, ponieważ te późniejsze czynności mogą legalnie zmienić dziennik P4 albo NVM. Surowy plik ST-Link nie jest pakietem APP do `SDUPDATE`.
 
-## 4. Ustawienie P4 i kontrola po instalacji
+## 8. Ustawienie P4 i kontrola po instalacji
 
 Świeżo zapisany BOOT startuje na **250000, 8N1**. Wybierz własną prędkość w `Diagnostics → UART → P4 baud rate`: **19200, 57600, 115200, 250000, 500000**. Dopasuj terminal natychmiast po wyborze. Zapis jest trwały, również bez SD. **UP+DOWN przy starcie** wymusza tylko na ten start 250000, bez nadpisania zapisanego wyboru. Instalator zawsze ma własne stałe 250000.
 
-![UART](../images/v1.5/03_uart.png)
-![Prędkości P4](../images/v1.5/04_baud.png)
+![UART](images/03_uart.png)
+![Prędkości P4](images/04_baud.png)
 
 `INFO` w nowym stałym BOOT powinno zawierać **`BUILD RELEASE 1.5-HW2`**. W `Diagnostics → Hardware` dane są pobierane z drukarki; ekran pozostaje do świeżego OK. Porównaj dane z własnym egzemplarzem. `Print time` oznacza zapisany czas drukowania. Sprawdź końce list, powrót Back i zmianę kierunku. Zachowaj rezultat i dokładny komunikat przy problemie.
 
-## 5. Odmowy i częste pomyłki
+## 9. Odmowy i częste pomyłki
 
 | Objaw | Co zrobić |
 |---|---|

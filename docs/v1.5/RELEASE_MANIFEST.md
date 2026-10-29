@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-29 · **Author:** Marcin Kowalik · **Target:** Inventure V9 / STM32F207 / 256 KiB.
 
-[Project](../../README.md) · [PL installation](INSTALACJA_PL.md) · [EN installation](INSTALLATION_EN.md) · [v1.4 manifest retained](../RELEASE_MANIFEST.md)
+[Project](../../README.md) · [PL installation](INSTALACJA_PL.md) · [EN installation](INSTALLATION_EN.md) · [v1.4 manifest retained](../v1.4/RELEASE_MANIFEST.md)
 
 ## Canonical artifacts — unchanged after the hardware report
 
@@ -51,6 +51,17 @@ Original unscaled font in both programs; persistent read-only Hardware screen in
 
 ## Publication scope and archive
 
-Only the three firmware distributions, checksums, updated descriptions/manuals and existing native PNG previews are added. Existing key-free `tools/ibtool.py` and `tools/vendor_tool.py` remain unchanged. No standalone fonts, BOOT/installer source, ELF/map files, decryption/signing utilities, private complete ZIP or unique device dumps are uploaded.
+Only the three firmware distributions, checksums, updated descriptions/manuals and existing native PNG previews are added. Public key-free host utilities remain available. Only ibtool.py help wording was updated during the documentation audit; executable AST/protocol logic is unchanged. No standalone fonts, BOOT/installer source, ELF/map files, decryption/signing utilities, private complete ZIP or unique device dumps are uploaded.
 
-The complete `firmware/v1.4`, its checksum file, original root-level v1.4 manuals and v1.3 archives remain. The v1.4 installer is **not promised to accept v1.5-HW2 as a downgrade source**.
+The complete `firmware/v1.4`, its checksum file, versioned v1.4 manuals in docs/v1.4 and v1.3 archives remain. The v1.4 installer is **not promised to accept v1.5-HW2 as a downgrade source**.
+
+## Documentation maintenance, 29 October 2026
+
+Current documentation is fully contained in `docs/v1.5`; archived v1.4 manuals and their images are in `docs/v1.4`. Release binaries and the v1.5 tag are not changed. [Audit report](AUDYT_REPOZYTORIUM_PL.md) · [Machine-readable checks](AUDIT_CHECKS.json). Earlier build counts above are archived results, not a new firmware regression run.
+
+### Current public host-tool identities
+
+| File | SHA-256 | Change scope |
+|---|---|---|
+| [tools/ibtool.py](../../tools/ibtool.py) | `e68163fa90630aff4e330ef8368a16258a78616a52843348038e25fc4d849ab2` | Help text only; logic unchanged |
+| [tools/vendor_tool.py](../../tools/vendor_tool.py) | `0c03dd74b4e763cf68b96325150bf01d2110a808a427e34fe8a792370cb377a8` | Byte-identical |

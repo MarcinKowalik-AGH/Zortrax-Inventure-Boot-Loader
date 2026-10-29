@@ -3,11 +3,15 @@
 **Release:** v1.5 · **Build:** RELEASE 1.5-HW2 · **Published:** 29 October 2026  
 **Target:** Zortrax Inventure V9 / STM32F207 / 256 KiB Flash. Author: Marcin Kowalik.
 
-[Project](../../README.md) · [Polski](INSTALACJA_PL.md) · [Features/P4](FUNKCJE_I_KONSOLA.md) · [Manifest](RELEASE_MANIFEST.md) · [Archived v1.4 manual](../INSTALLATION_EN.md)
+[Project](../../README.md) · [Polski](INSTALACJA_PL.md) · [Features/P4](FEATURES_AND_CONSOLE_EN.md) · [Manifest](RELEASE_MANIFEST.md) · [Archived v1.4 manual](../v1.4/INSTALLATION_EN.md)
 
 The owner reported successful installation and operation on **one printer**. These are the exact tested binaries, not a new build. The report does not separately identify tests of all three installation routes. The installer still contains its build-time `V1.5 HW2 - HW UNTESTED` banner; the later hardware report is recorded here rather than modifying tested bytes.
 
 **Hardware — physically confirmed:** on 29 October 2026 the owner explicitly confirmed that the permanent bootloader Hardware screen **correctly reads the actual printer data** on his device. This is an on-device confirmation, not just a model test. Manual previews still use clearly synthetic examples rather than private printer data.
+
+## Navigation
+
+[FROM FACTORY](#factory) · [UPGRADE](#upgrade) · [Shared SD/RESTORE stage](#installer) · [ST-Link](#stlink) · [Console](FEATURES_AND_CONSOLE_EN.md) · [APP examples](P4_UART_EXAMPLES_EN.md)
 
 ## 1. Select the correct route
 
@@ -49,7 +53,9 @@ Extract **one** SD ZIP on the computer. Copy its four files to **FAT32 SD root**
 
 The two A5-filled slots are **templates, not completed backups**. Never overwrite real backups with templates: first preserve them elsewhere and use a separately prepared card. Do not copy an unopened ZIP, private source archive, or standalone ST-Link BIN onto the installation card. Do not mix both installers. Safely eject the card.
 
-## A. FROM FACTORY — original Zortrax BOOT
+<a id="factory"></a>
+
+## 4. A — FROM FACTORY — original Zortrax BOOT
 
 1. Complete prerequisites and backups **before inserting the card**, including protection-state checks.
 2. Power down and insert the **SD_FACTORY_V9** card containing `InventureUpdate.bin`.
@@ -57,11 +63,13 @@ The two A5-filled slots are **templates, not completed backups**. Never overwrit
 4. Wait for **`SD BOOT INSTALLER - V9`**. The `Inventure boot v1.5` header shown by this temporary APP **does not mean that BOOT has already been replaced**.
 5. Continue with C: two verified backups, separate physical confirmation, BOOT write/restart and APP restore.
 
-![HW2 installer menu](../images/v1.5/10_installer_menu.png)
+![HW2 installer menu](images/10_installer_menu.png)
 
 This is a native UI render, not a photograph or evidence of a separate factory-route hardware test. If the original screen remains or an error is reported, stop and check package/card/target conditions; do not assume success or change protection to force installation.
 
-## B. UPGRADE — existing custom Inventure boot
+<a id="upgrade"></a>
+
+## 5. B — UPGRADE — existing custom Inventure boot
 
 1. Prepare the **SD_UPGRADE** card as in section 3.
 2. Restart and interrupt the **5-second** autoboot countdown using a button. The custom BOOT does not install an SD file automatically.
@@ -70,18 +78,20 @@ This is a native UI render, not a photograph or evidence of a separate factory-r
 5. Choose `Start application → Launch application`; release buttons, then hold **OK+DOWN for 2 seconds**. UP alone cancels.
 6. When the installer menu appears, continue with C.
 
-![File list](../images/v1.5/05_files.png)
-![Separate check/install actions](../images/v1.5/06_file.png)
+![File list](images/05_files.png)
+![Separate check/install actions](images/06_file.png)
 
 Screens are from the new HW2 renderer; your older BOOT may look different. For v1.2 without file browsing, use `Check SD package` and `Install firmware` with one valid standard-name `INVENTUR.IVB`; the launch entry may be called `Start firmware`. UART equivalents are `SDCHECK`, `SDUPDATE`, then `BOOT`, with the same physical confirmations. A numeric selection must always come from the current `LIST`.
 
-## C. Both SD routes — replace BOOT, then restore APP
+<a id="installer"></a>
+
+## 6. C — Both SD routes — replace BOOT, then restore APP
 
 ### C1. Back up BOOT twice
 
 Choose **`Backup current boot x2`**. Wait for both write/readback checks and RESTORE verification. Success is reported as **`TWO SD COPIES VERIFIED` / `SELECT INSTALL SEPARATELY`**, or **`TWO BOOT BACKUPS VERIFIED`** when the existing slots already match.
 
-![Backup and verification](../images/v1.5/12_installer_backup.png)
+![Backup and verification](images/12_installer_backup.png)
 
 An unrelated older backup is not silently overwritten. Opening `Hardware` or seeing the board-check result is not a substitute for two verified backups.
 
@@ -94,7 +104,7 @@ Choose **`Install / reinstall boot`**. Wait during source/backup/RESTORE/write-p
 3. At the second prompt hold **OK+UP for five full seconds**. DOWN cancels. Do not hold the combination from the beginning of verification; selecting the menu entry is not this confirmation.
 4. After acceptance the installer checks prerequisites again and writes BOOT. **Keep power and SD connected**. Buttons may be released after the gesture has been accepted.
 
-![BOOT confirmation](../images/v1.5/13_installer_gesture.png)
+![BOOT confirmation](images/13_installer_gesture.png)
 
 Progress percentages refer to the named current phase. `--` may be shown when a reliable range is unavailable; it is not a fault or a fabricated completion percentage.
 
@@ -102,7 +112,7 @@ Progress percentages refer to the named current phase. `--` may be shown when a 
 
 On success the installer shows `NEW BOOT INSTALLED` / `REBOOTING TO BOOT MENU` and resets. **Interrupt autoboot**: APP still contains the installer. Keep the card inserted.
 
-![Installer success](../images/v1.5/14_installer_success.png)
+![Installer success](images/14_installer_success.png)
 
 In the new BOOT explicitly choose `RESTORE.BIN` through `Firmware on SD → Choose firmware file`. Run `Check selected file`, then `Install selected file` with **OK+UP 2 s**. Run `Diagnostics → Verify Flash`. Only after success launch the APP with **OK+DOWN 2 s**.
 
@@ -110,7 +120,9 @@ UART alternative: `LIST`, actual `SELECT n` for RESTORE, `SDCHECK`, `SDUPDATE`, 
 
 The supplied RESTORE installs **stock Zortrax 1.6.1/r0323**, not an arbitrary previous application. Restoring a custom APP such as a V9-specific Klipper build is a separate checked choice. Preserve the completed BOOT backups on the computer.
 
-## D. ST-Link/SWD — BOOT only, APP remains installed
+<a id="stlink"></a>
+
+## 7. D — ST-Link/SWD — BOOT only, APP remains installed
 
 1. Connect with power off, using the verified SWD connector for your board: **SWDIO, SWCLK, common GND and target-voltage reference as required by the actual probe**, plus NRST only as documented. Do not guess pin order or feed probe supply into a powered printer.
 2. In STM32CubeProgrammer select **ST-LINK / SWD**, connect to the properly powered target and halt the MCU. Verify MCU identity and **256 KiB Flash**. Read protection status without changing it. Stop on access refusal; no Read Unprotect/Mass Erase.
@@ -137,16 +149,16 @@ print('PASS: BOOT matches; NVM and APP preserved')
 
 Run these comparisons before changing baud or launching APP; subsequent legitimate operations may change the P4 journal or NVM. The standalone BOOT BIN is not an APP package for `SDUPDATE`.
 
-## 4. P4 configuration and acceptance checks
+## 8. P4 configuration and acceptance checks
 
 Freshly written BOOT starts at **250000, 8N1**. Choose the desired rate in `Diagnostics → UART → P4 baud rate`: **19200 / 57600 / 115200 / 250000 / 500000**, then immediately adjust your terminal. Normal APP updates preserve the saved rate. **UP+DOWN during startup** temporarily forces 250000 without overwriting the stored setting. The installer always uses its own fixed 250000.
 
-![UART menu](../images/v1.5/03_uart.png)
-![Baud selection](../images/v1.5/04_baud.png)
+![UART menu](images/03_uart.png)
+![Baud selection](images/04_baud.png)
 
 `INFO` in the permanent BOOT should report **`BUILD RELEASE 1.5-HW2`**. `Diagnostics → Hardware` reads the actual printer and stays until a fresh OK press. `Print time` is recorded printing time, not total powered-on time. Compare device data, exercise both list boundaries and direction changes, and retain exact errors if anything fails.
 
-## 5. Troubleshooting
+## 9. Troubleshooting
 
 | Symptom | Response |
 |---|---|

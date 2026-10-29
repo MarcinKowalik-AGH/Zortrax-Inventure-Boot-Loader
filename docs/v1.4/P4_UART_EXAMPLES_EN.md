@@ -1,6 +1,10 @@
 # P4 UART console — commands and firmware update examples
 
-**Target:** Inventure boot v1.4 `P4-PERSIST-r2`, STM32F207 V9, APP `0x08010000`. [Project](../README.md) · [Existing complete console reference](FEATURES_AND_CONSOLE_EN.md) · [BOOT installation](INSTALLATION_EN.md) · [Polski](KONSOLA_P4_PRZYKLADY_PL.md)
+> **ARCHIWUM / ARCHIVE v1.4 — P4-PERSIST-r2.** Ten dokument opisuje starsze wydanie, nie bieżącą v1.5. / This document describes the older release, not v1.5.
+> [Aktualna dokumentacja / Current docs v1.5](../v1.5/README.md) · [Indeks archiwum / Archive index](README.md)
+
+
+**Target:** Inventure boot v1.4 `P4-PERSIST-r2`, STM32F207 V9, APP `0x08010000`. [Project](../../README.md) · [Existing complete console reference](FEATURES_AND_CONSOLE_EN.md) · [BOOT installation](INSTALLATION_EN.md) · [Polski](KONSOLA_P4_PRZYKLADY_PL.md)
 
 > The `INV>` prompt exists only while the **custom bootloader** is active. The commands here update **APP only**, not BOOT/NVM/OTP/Option Bytes. This is not stock Zortrax firmware or Klipper G-code console.
 
@@ -53,7 +57,7 @@ BOOT
 
 **Use the actual zero-based index from `LIST`**: 0 is illustrative. `SDUPDATE` needs OK+UP 2 s on the panel. After successful `VERIFY`, `BOOT` requires OK+DOWN 2 s. APP is changed; BOOT and factory NVM are preserved.
 
-**Encrypted ZRTX over UART:** the public [`tools/vendor_tool.py`](../tools/vendor_tool.py) contains **no AES key** and cannot decrypt `InventureUpdate.bin`. The public `ibtool.py serial` sender expects a valid **IVB**, not encrypted ZRTX. Use the **SD route above** for a supported encrypted vendor file — the bootloader itself recognizes and validates it.
+**Encrypted ZRTX over UART:** the public [`tools/vendor_tool.py`](../../tools/vendor_tool.py) contains **no AES key** and cannot decrypt `InventureUpdate.bin`. The public `ibtool.py serial` sender expects a valid **IVB**, not encrypted ZRTX. Use the **SD route above** for a supported encrypted vendor file — the bootloader itself recognizes and validates it.
 
 You may inspect the outer ZRTX envelope **without decrypting any application bytes**:
 
@@ -82,7 +86,7 @@ BOOT
 
 1 is only an example; read the real index. `RESTORE.BIN` must be selected explicitly.
 
-For UART, the **public** [`tools/vendor_tool.py`](../tools/vendor_tool.py) packages an **already decoded** known stock APP after comparing its SHA-256 with eight archived references. The **public** [`tools/ibtool.py`](../tools/ibtool.py) inspects and transfers IVB, without decrypting vendor firmware or producing a vendor tail:
+For UART, the **public** [`tools/vendor_tool.py`](../../tools/vendor_tool.py) packages an **already decoded** known stock APP after comparing its SHA-256 with eight archived references. The **public** [`tools/ibtool.py`](../../tools/ibtool.py) inspects and transfers IVB, without decrypting vendor firmware or producing a vendor tail:
 
 ```sh
 python3 -m pip install pyserial
@@ -100,7 +104,7 @@ python3 tools/ibtool.py serial STOCK_RAW_R0323.IVB --port /dev/cu.YOUR_PORT --ba
 
 You need a real **STM32F207 V9** application compiled/linked at **0x08010000**, with correct clocks, GPIO, peripherals, thermal safety and host settings. A generic `klipper.bin` is **not compatible by name**. The custom unencrypted `INVB001` format uses a 64-byte header, target `0x32463956`, base `0x08010000`, length and SHA-256. Raw APP payload is **8–196352 bytes**, with valid aligned MSP in 128 KiB SRAM and Thumb Reset vector within the payload. These structural conditions **do not prove safe operation**.
 
-Use the **public** [`tools/ibtool.py`](../tools/ibtool.py) to package and check a V9-specific raw app:
+Use the **public** [`tools/ibtool.py`](../../tools/ibtool.py) to package and check a V9-specific raw app:
 
 ```sh
 python3 tools/ibtool.py pack klipper.bin KLIPPER_V9.IVB

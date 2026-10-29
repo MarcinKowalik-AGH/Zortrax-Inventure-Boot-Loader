@@ -1,5 +1,9 @@
 # v1.4 P4-PERSIST-r2 — manifest publikacji / publication manifest
 
+> **ARCHIWUM / ARCHIVE v1.4 — P4-PERSIST-r2.** Ten dokument opisuje starsze wydanie, nie bieżącą v1.5. / This document describes the older release, not v1.5.
+> [Aktualna dokumentacja / Current docs v1.5](../v1.5/README.md) · [Indeks archiwum / Archive index](README.md)
+
+
 **Data / Date:** 2026-10-25  
 **Autor / Author:** Marcin Kowalik · mkowalik@agh.edu.pl  
 **Boot:** Inventure boot v1.4, BUILD P4-PERSIST-r2  
@@ -10,9 +14,9 @@
 
 | Plik / File | B | SHA-256 | Git blob SHA-1 |
 |---|---:|---|---|
-| [Inventure_boot_v1.4_P4_PERSIST_r2_SD_UPGRADE.zip](../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_UPGRADE.zip) | 137282 | `327da4da2c53c6ee49ccb45121b2b973b18c99c93952c2af051d0f4e071c956b` | `d5904c72202d2163cfafb56a289174e5cd8640f1` |
-| [Inventure_boot_v1.4_P4_PERSIST_r2_SD_FACTORY_V9.zip](../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_FACTORY_V9.zip) | 151323 | `050d6531ac875e599dbfe3e79acc99dfb350210dd2d624f2666e8d626c4577b1` | `4e586ff973e3750b5e1061748365f83bf6d4a50b` |
-| [Inventure_boot_v1.4_P4_PERSIST_r2_FULL_32KiB_0x08000000.bin](../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_FULL_32KiB_0x08000000.bin) | 32768 | `9ffd140879b6946bed63928fba3ff7b38ff3db289710a2e0845eecbd9caf10ea` | `f2ef16dc500a3398e082a0a993e3222d45ba98b2` |
+| [Inventure_boot_v1.4_P4_PERSIST_r2_SD_UPGRADE.zip](../../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_UPGRADE.zip) | 137282 | `327da4da2c53c6ee49ccb45121b2b973b18c99c93952c2af051d0f4e071c956b` | `d5904c72202d2163cfafb56a289174e5cd8640f1` |
+| [Inventure_boot_v1.4_P4_PERSIST_r2_SD_FACTORY_V9.zip](../../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_SD_FACTORY_V9.zip) | 151323 | `050d6531ac875e599dbfe3e79acc99dfb350210dd2d624f2666e8d626c4577b1` | `4e586ff973e3750b5e1061748365f83bf6d4a50b` |
+| [Inventure_boot_v1.4_P4_PERSIST_r2_FULL_32KiB_0x08000000.bin](../../firmware/v1.4/Inventure_boot_v1.4_P4_PERSIST_r2_FULL_32KiB_0x08000000.bin) | 32768 | `9ffd140879b6946bed63928fba3ff7b38ff3db289710a2e0845eecbd9caf10ea` | `f2ef16dc500a3398e082a0a993e3222d45ba98b2` |
 
 Oba ZIP zawierają wyłącznie cztery pliki binarne: właściwy instalator, RESTORE.BIN i dwa prealokowane miejsca na kopie BOOT. Nie zawierają źródeł, narzędzi, ELF, map, raportów wewnętrznych ani prywatnych zrzutów. Osobny BIN ma dokładnie 32768 B. Sumy dotyczą niezmienionych plików przekazanych właścicielowi przed jego potwierdzoną próbą.
 
@@ -28,8 +32,8 @@ Dodano **dwa skrypty hosta**; nie zmieniono żadnego z trzech opublikowanych obr
 
 | Skrypt | SHA-256 | Zakres |
 |---|---|---|
-| [`tools/ibtool.py`](../tools/ibtool.py) | `d23c6d0f3dd097dabed548f5ba1f3b87f91d13fd7d28b2c3c294a377faabd254` | IVB pack/inspect/serial, transmisja IBD1 |
-| [`tools/vendor_tool.py`](../tools/vendor_tool.py) | `0c03dd74b4e763cf68b96325150bf01d2110a808a427e34fe8a792370cb377a8` | Sprawdzenie SHA-256 ośmiu znanych, **już odszyfrowanych** APP, pakowanie IVB, inspekcja metadanych ZRTX |
+| [`tools/ibtool.py`](https://github.com/MarcinKowalik-AGH/Zortrax-Inventure-Boot-Loader/blob/682dcdce241573f66e0cadbce8a933b610febb38/tools/ibtool.py) | `d23c6d0f3dd097dabed548f5ba1f3b87f91d13fd7d28b2c3c294a377faabd254` | IVB pack/inspect/serial, transmisja IBD1 |
+| [`tools/vendor_tool.py`](https://github.com/MarcinKowalik-AGH/Zortrax-Inventure-Boot-Loader/blob/682dcdce241573f66e0cadbce8a933b610febb38/tools/vendor_tool.py) | `0c03dd74b4e763cf68b96325150bf01d2110a808a427e34fe8a792370cb377a8` | Sprawdzenie SHA-256 ośmiu znanych, **już odszyfrowanych** APP, pakowanie IVB, inspekcja metadanych ZRTX |
 
 Public tools include **no encryption/decryption keys, no HMAC signing key, no stored tail20 bytes, and no tail synthesis**. Encrypted ZRTX conversion to IVB is deliberately unavailable; install supported encrypted stock packages via the SD route. Already-decrypted raw stock wrapped as IVB is a **custom-manifest representation**, not exact vendor-tail restoration. Full pre-existing plaintext vendor payloads are accepted only by complete SHA-256 allowlist match. Host-tool checks were conducted offline; not separate flash hardware tests.
 
@@ -70,3 +74,5 @@ Every canonical BOOT installation resets the P4 journal to default **250000**. N
 The illustrated [Polish](INSTALACJA_PL.md) and [English](INSTALLATION_EN.md) manuals cover factory SD, custom-BOOT upgrade and ST-Link. OLED images are generated from the actual native C renderers. Installer status screens are captured from native backup/install/confirmation runs with a simulated SD/Flash backend; selected menu states are rendered using actual labels. They are not photographs or proof of new physical runs. r9898 uses its existing font; the new bootloader uses the original stock proportional font.
 
 Publication originally added only the three binary distributions, checksums, manuals and PNG illustrations. A later documentation update also added two **secret-free host-side Python scripts**, without changing those binaries. No production source code, assembler, ELF, map, linker scripts, cryptographic analysis, unique printer dump, NVM, OTP, UID or option-byte snapshot is published. Existing historical v1.3 ZIPs remain unchanged.
+
+**Archiwalne sumy narzędzi:** identyfikują skrypty z chwili publikacji 1.4; powyższe odnośniki przypięto do zachowanego commitu. Bieżące narzędzia i ich zakres są w [tools](../../tools/README.md).

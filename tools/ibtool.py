@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline package builder and bounded serial file server for Inventure boot v1.4.
+"""Offline package builder and bounded serial file server for Inventure boot v1.4 / v1.5 (RELEASE 1.5-HW2).
 
 This does not install the bootloader, bypass stock validation, read arbitrary
 printer memory, or change protection. Serial requires this loader ALREADY running.
