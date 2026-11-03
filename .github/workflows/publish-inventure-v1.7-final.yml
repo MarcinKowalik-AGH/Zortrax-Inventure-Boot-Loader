@@ -1,0 +1,136 @@
+name: Publish Inventure v1.7 FINAL
+on:
+  push:
+    paths:
+      - .github/workflows/publish-inventure-v1.7-final.yml
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify pinned files, publish exactly three distributions, and remove one-shot workflow
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import os,io,json,hashlib,base64,zipfile,urllib.request,urllib.parse,urllib.error,posixpath,re
+          REPO="MarcinKowalik-AGH/Zortrax-Inventure-Boot-Loader"
+          BASE="6a86d090b2691d6dac7faaf4a491f8ac92d9a7fc"
+          WORKFLOW=".github/workflows/publish-inventure-v1.7-final.yml"
+          DRIVE="1GJNJ-FVWbLIogkORrbNrIces-zKubWFi"
+          LENGTH=330304
+          DIGEST="f3b3845e35661a53cb8c68bb861fddc3d16e4578901f34186f911ea3473bfafa"
+          API="https://api.github.com/repos/"+REPO
+          TOKEN=os.environ["GH_TOKEN"]
+          def sh(x): return hashlib.sha256(x).hexdigest()
+          def blobsha(x): return hashlib.sha1(("blob %d\0"%len(x)).encode()+x).hexdigest()
+          def must(cond,msg):
+           if not cond:raise RuntimeError(msg)
+          def req(url,body=None,method=None,ctype="application/json"):
+           if not url.startswith("https://"):url=API+url
+           must(urllib.parse.urlsplit(url).hostname in ("api.github.com","uploads.github.com"),"bad hostname")
+           data=None if body is None else (body if isinstance(body,bytes) else json.dumps(body).encode())
+           headers={"Authorization":"Bearer "+TOKEN,"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28","User-Agent":"Inventure-v17-publisher","Content-Type":ctype}
+           with urllib.request.urlopen(urllib.request.Request(url,data=data,method=method,headers=headers),timeout=90) as response:
+            obj=response.read()
+           return json.loads(obj) if obj else None
+          def tree(ref):
+           obj=req("/git/trees/"+ref+"?recursive=1"); must(not obj.get("truncated"),"truncated tree")
+           return {x["path"]:x for x in obj["tree"] if x["type"]=="blob"}
+          def maybe(path):
+           try:return req(path)
+           except urllib.error.HTTPError as ex:
+            if ex.code==404:return None
+            raise
+          must(os.environ.get("GITHUB_REPOSITORY")==REPO,"wrong repo")
+          url="https://drive.usercontent.google.com/download?"+urllib.parse.urlencode({"id":DRIVE,"export":"download","confirm":"t"})
+          with urllib.request.urlopen(urllib.request.Request(url,headers={"User-Agent":"Inventure-v17-publisher"}),timeout=90) as response:
+           archive=response.read(1000000)
+          must(len(archive)==LENGTH and sh(archive)==DIGEST,"source ZIP checksum mismatch")
+          with zipfile.ZipFile(io.BytesIO(archive)) as z:
+           must(z.testzip() is None,"bad ZIP CRC")
+           must(len(z.namelist())==10 and len(set(z.namelist()))==10,"wrong file count")
+           content={}
+           for name in z.namelist():
+            must(name==posixpath.normpath(name) and ".." not in name.split("/") and not name.startswith("/"),"unsafe path")
+            must(name in ("README.md","docs/README.md","docs/v1.7/README.md","docs/v1.7/INSTALACJA_PL.md","docs/v1.7/INSTALLATION_EN.md","firmware/v1.7/MANIFEST.json","firmware/v1.7/SHA256SUMS.txt") or (name.startswith("firmware/v1.7/") and (name.endswith(".zip") or name.endswith(".bin"))),"unexpected file "+name)
+            content[name]=z.read(name)
+          manifest=json.loads(content["firmware/v1.7/MANIFEST.json"])
+          must(manifest["release"]=="v1.7" and manifest["build"]=="RELEASE 1.7","release misidentified")
+          must(manifest["baud_menu"]==[115200,250000,500000,750000,1500000],"menu order mismatch")
+          must(manifest["boot_free_before_journal"]==8,"boot memory overrun")
+          files=manifest["files"]
+          must(len(files)==3,"not three distributions")
+          for name,metadata in files.items():
+           data=content["firmware/v1.7/"+name]
+           must(len(data)==metadata["size"] and sh(data)==metadata["sha256"],"firmware checksum "+name)
+          boot_name=next(x for x in files if x.endswith(".bin"))
+          boot=content["firmware/v1.7/"+boot_name]
+          must(len(boot)==32768 and boot[32512:]==b"\xff"*256,"boot journal is not empty")
+          must(b"Inventure boot v1.7" in boot and b"RELEASE 1.7" in boot,"wrong boot identity")
+          must(all(x not in boot for x in (b"RELEASE 1.6-RC2",b"Inventure boot v1.5")),"old banner")
+          for name in files:
+           if not name.endswith(".zip"):continue
+           with zipfile.ZipFile(io.BytesIO(content["firmware/v1.7/"+name])) as z:
+            must(z.testzip() is None,"nested ZIP corrupt")
+            must(set(z.namelist())==({"INVENTUR.IVB","RESTORE.BIN","ZBACKUP.BIN","ZBACK2.BIN"} if "UPGRADE" in name else {"InventureUpdate.bin","RESTORE.BIN","ZBACKUP.BIN","ZBACK2.BIN"}),"SD missing files")
+            must(sh(z.read("RESTORE.BIN"))=="1368bdbddad941a8f7c025715946662a34d3def442d0d3c00af4315b54c8ba17","restore mismatch")
+            must(all(z.read(x)==b"\xa5"*32768 for x in ("ZBACKUP.BIN","ZBACK2.BIN")),"backup placeholders invalid")
+          expected_lines={x:y["sha256"] for x,y in files.items()}
+          for line in content["firmware/v1.7/SHA256SUMS.txt"].decode().splitlines():
+           hashval,filename=line.split("  ",1)
+           must(filename in expected_lines and hashval==expected_lines[filename],"bad sha line")
+          before=tree(BASE)
+          head=req("/git/ref/heads/main")["object"]["sha"]
+          must(head==os.environ["GITHUB_SHA"],"concurrent write")
+          must(head!=BASE and WORKFLOW in tree(head),"staging workflow missing")
+          head_commit=req("/git/commits/"+head)
+          must(len(head_commit["parents"])==1 and head_commit["parents"][0]["sha"]==BASE,"unexpected staging parent")
+          must(all(path in tree(head) and tree(head)[path]["sha"]==entry["sha"] for path,entry in before.items()),"preexisting content changed")
+          must(set(tree(head))-set(before)=={WORKFLOW},"unexpected staging file")
+          entries=[]
+          for name,data in sorted(content.items()):
+           result=req("/git/blobs",{"content":base64.b64encode(data).decode(),"encoding":"base64"},"POST")
+           must(result["sha"]==blobsha(data),"blob hash mismatch")
+           entries.append({"path":name,"mode":"100644","type":"blob","sha":result["sha"]})
+          entries.append({"path":WORKFLOW,"mode":"100644","type":"blob","sha":None})
+          nt=req("/git/trees",{"base_tree":head_commit["tree"]["sha"],"tree":entries},"POST")["sha"]
+          commit=req("/git/commits",{"message":"release: Inventure boot v1.7 FINAL, five UART rates and versioned documentation\n\nPublish three sha-pinned distributions and PL/EN guides; preserve prior v1.4/v1.5 and host tools. Hardware acceptance of v1.7 pending.","tree":nt,"parents":[head]},"POST")["sha"]
+          must(req("/git/ref/heads/main")["object"]["sha"]==head,"concurrent push")
+          req("/git/refs/heads/main",{"sha":commit,"force":False},"PATCH")
+          after=tree(commit)
+          must(WORKFLOW not in after,"workflow not removed")
+          must(len(after)==len(before)+7,"unexpected count")
+          for name,entry in before.items():
+           if name not in ("README.md","docs/README.md"):must(after[name]["sha"]==entry["sha"],"historical change "+name)
+          for name,data in content.items():must(after[name]["sha"]==blobsha(data),"published mismatch "+name)
+          # Check all newly authored links after adding versioned content.
+          checked=0
+          for name,data in content.items():
+           if not name.endswith(".md"):continue
+           for link in re.findall(r"\]\(([^)]+)\)",data.decode()):
+            if re.match(r"^(https?://|#|mailto:)",link):continue
+            resolved=posixpath.normpath(posixpath.join(posixpath.dirname(name),link.split("#")[0]))
+            must(resolved in after or any(x.startswith(resolved+"/") for x in after),"broken link "+name+" -> "+resolved)
+            checked+=1
+          release=maybe("/releases/tags/v1.7")
+          must(release is None,"v1.7 tag already exists; abort rather than overwrite")
+          notes=content["docs/v1.7/README.md"].decode()+"\n\nFull installation guides: https://github.com/"+REPO+"/blob/main/docs/v1.7/INSTALACJA_PL.md (PL), https://github.com/"+REPO+"/blob/main/docs/v1.7/INSTALLATION_EN.md (EN). Previous v1.4 and v1.5 remain.\n\nIMPORTANT: This exact v1.7 build has not yet been physically validated, even though its target version is FINAL."
+          release=req("/releases",{"tag_name":"v1.7","target_commitish":commit,"name":"Inventure boot v1.7 FINAL — RELEASE 1.7","body":notes,"draft":True,"prerelease":False},"POST")
+          assets=[]
+          for name in list(files)+["SHA256SUMS.txt"]:
+           data=content["firmware/v1.7/"+name]
+           u=release["upload_url"].split("{")[0]+"?"+urllib.parse.urlencode({"name":name})
+           item=req(u,data,"POST","application/zip" if name.endswith(".zip") else "application/octet-stream" if name.endswith(".bin") else "text/plain")
+           must(item["size"]==len(data) and (not item.get("digest") or item["digest"]=="sha256:"+sh(data)),"asset upload mismatch")
+           assets.append(item)
+          release=req("/releases/"+str(release["id"]),{"draft":False,"prerelease":False,"make_latest":"true"},"PATCH")
+          must(release["draft"]==False and release["prerelease"]==False,"not public")
+          for item in assets:
+           with urllib.request.urlopen(item["browser_download_url"],timeout=90) as r:download=r.read(1000000)
+           must(download==content["firmware/v1.7/"+item["name"]],"anonymous asset mismatch")
+          output={"status":"PASS_PUBLICATION","commit":commit,"url":release["html_url"],"assets":[{"name":x["name"],"size":x["size"],"sha256":sh(content["firmware/v1.7/"+x["name"]])} for x in assets],"old_files_preserved":len(before)-2,"checked_new_links":checked}
+          print(json.dumps(output,ensure_ascii=False,indent=2),flush=True)
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as f:f.write("## Inventure 1.7 FINAL\n\n"+json.dumps(output,ensure_ascii=False,indent=2))
+          PY
