@@ -1,0 +1,35 @@
+{
+  "release": "v1.7",
+  "build": "RELEASE 1.7",
+  "date": "2026-11-03",
+  "target": "Zortrax Inventure V9, STM32F207, Flash 256KiB",
+  "hardware_validation": "not yet performed for this exact build",
+  "baud_menu": [
+    115200,
+    250000,
+    500000,
+    750000,
+    1500000
+  ],
+  "default_baud": 250000,
+  "bootwait_uart_default": "OFF",
+  "p4_journal": "0x08007F00-0x08007FFF; 256 B",
+  "boot_base": "0x08000000",
+  "boot_used_bytes": 32504,
+  "boot_free_before_journal": 8,
+  "stock_restore": "1.6.1/r0323; not Klipper",
+  "files": {
+    "Inventure_boot_v1.7_RELEASE_1.7_2026-11-03_SD_UPGRADE.zip": {
+      "size": 140880,
+      "sha256": "fc965284fd7fbb575ef8ed2af1b700836b51747d9d08ba1ca7b7467722fcb0f5"
+    },
+    "Inventure_boot_v1.7_RELEASE_1.7_2026-11-03_SD_FACTORY_V9.zip": {
+      "size": 155035,
+      "sha256": "33846d24661e252d4f2eadc0a62bae5ab9cab81636b2acaadcc03c9a3eff23fc"
+    },
+    "Inventure_boot_v1.7_RELEASE_1.7_2026-11-03_STLINK_32KiB_0x08000000.bin": {
+      "size": 32768,
+      "sha256": "a8b5dbbef4e580726104cb9c812f1614f7d7cc92d978166202474cb986a57d9d"
+    }
+  }
+}

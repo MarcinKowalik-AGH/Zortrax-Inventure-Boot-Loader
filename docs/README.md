@@ -1,11 +1,10 @@
-# Dokumentacja Inventure boot — wybierz wersję / choose a version
+# Inventure Boot Loader — documentation index / indeks dokumentacji
 
-| Wersja / Version | Status | Dokumentacja / Documentation | Binaria / Firmware |
+| Release | Status | Manuals | Firmware |
 |---|---|---|---|
-| **v1.5 — RELEASE 1.5-HW2** | **Aktualna / Current** | **[docs/v1.5](v1.5/README.md)** | [Trzy pakiety](../firmware/v1.5) |
-| v1.4 — P4-PERSIST-r2 | Archiwum / Archive | [docs/v1.4](v1.4/README.md) | [Zachowane binaria](../firmware/v1.4) |
-| v1.3 | Starsze archiwum / Legacy | [Historyczna instrukcja](v1.3/README.md) | [Zachowane karty SD](../SD_INSTALLATION) |
+| **v1.7 — RELEASE 1.7** | **Latest; hardware acceptance pending** | [v1.7](v1.7/README.md) | [v1.7](../firmware/v1.7) |
+| v1.5-HW2 | Archived, owner-tested on one printer | [v1.5](v1.5/README.md) | [v1.5](../firmware/v1.5) |
+| v1.4 P4-PERSIST-r2 | Archived | [v1.4](v1.4/README.md) | [v1.4](../firmware/v1.4) |
+| v1.3 | Historic | [v1.3](v1.3/README.md) | [Legacy SD](../SD_INSTALLATION) |
 
-Każda wersja ma własne instrukcje i obrazy. Nie łącz kroków instalacyjnych ani plików różnych wydań. Dla bieżącej drukarki korzystaj z dokumentacji **v1.5-HW2**, nie z nieoznaczonego historycznego opisu.
-
-Each release has its own manuals and images. Do not mix packages/procedures across versions. Current instructions describe v1.5-HW2. [Project / downloads](../README.md) · [Public host tools](../tools/README.md).
+Do not mix installers, RESTORE files, or instructions from different versions. / Nie mieszaj instalatorów ani plików różnych wydań.
