@@ -18,7 +18,7 @@ jobs:
           REPO="MarcinKowalik-AGH/Zortrax-Inventure-Boot-Loader"
           BASE="6a86d090b2691d6dac7faaf4a491f8ac92d9a7fc"
           WORKFLOW=".github/workflows/publish-inventure-v1.7-final.yml"
-          DRIVE="1GJNJ-FVWbLIogkORrbNrIces-zKubWFi"
+          DRIVE="1fKRr-B68Nbv9rZP0Mhllxx98q_i6g3lT"
           LENGTH=330304
           DIGEST="f3b3845e35661a53cb8c68bb861fddc3d16e4578901f34186f911ea3473bfafa"
           API="https://api.github.com/repos/"+REPO
@@ -86,7 +86,7 @@ jobs:
           must(head==os.environ["GITHUB_SHA"],"concurrent write")
           must(head!=BASE and WORKFLOW in tree(head),"staging workflow missing")
           head_commit=req("/git/commits/"+head)
-          must(len(head_commit["parents"])==1 and head_commit["parents"][0]["sha"]==BASE,"unexpected staging parent")
+          must(len(head_commit["parents"])==1 and head_commit["parents"][0]["sha"] in (BASE,"60c19ef653ffc941ef2bf92e9bc1eb4b59deac87"),"unexpected staging parent")
           must(all(path in tree(head) and tree(head)[path]["sha"]==entry["sha"] for path,entry in before.items()),"preexisting content changed")
           must(set(tree(head))-set(before)=={WORKFLOW},"unexpected staging file")
           entries=[]
